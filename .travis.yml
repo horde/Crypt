@@ -16,6 +16,7 @@ matrix:
 before_script:
   - export CRYPT_TEST_CONFIG='{"gnupg":"/usr/bin/gnupg","gnupg2":"/usr/bin/gnupg2"}';
   - phpenv config-rm xdebug.ini || echo "XDebug not enabled"
+  - pear channel-discover pear.horde.org
   - pear install channel://pear.horde.org/Horde_Test
   - pear install package.xml
 script:
