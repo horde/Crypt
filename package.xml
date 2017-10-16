@@ -16,7 +16,7 @@
   <email>jan@horde.org</email>
   <active>yes</active>
  </lead>
- <date>2017-09-19</date>
+ <date>2017-10-17</date>
  <version>
   <release>2.7.11</release>
   <api>2.7.0</api>
@@ -31,13 +31,6 @@
  </notes>
  <contents>
   <dir baseinstalldir="/" name="/">
-   <dir name="doc">
-    <dir name="Horde">
-     <dir name="Crypt">
-      <file name="COPYING" role="doc" />
-     </dir> <!-- /doc/Horde/Crypt -->
-    </dir> <!-- /doc/Horde -->
-   </dir> <!-- /doc -->
    <dir name="lib">
     <dir name="Horde">
      <dir name="Crypt">
@@ -344,6 +337,7 @@
      </dir> <!-- /test/Horde/Crypt -->
     </dir> <!-- /test/Horde -->
    </dir> <!-- /test -->
+   <file name="LICENSE" role="doc" />
   </dir> <!-- / -->
  </contents>
  <dependencies>
@@ -431,17 +425,16 @@
  </dependencies>
  <phprelease>
   <filelist>
-   <install as="COPYING" name="doc/Horde/Crypt/COPYING" />
    <install as="Horde/Crypt.php" name="lib/Horde/Crypt.php" />
    <install as="Horde/Crypt/Exception.php" name="lib/Horde/Crypt/Exception.php" />
    <install as="Horde/Crypt/Pgp.php" name="lib/Horde/Crypt/Pgp.php" />
-   <install as="Horde/Crypt/Smime.php" name="lib/Horde/Crypt/Smime.php" />
-   <install as="Horde/Crypt/Translation.php" name="lib/Horde/Crypt/Translation.php" />
    <install as="Horde/Crypt/Pgp/Backend.php" name="lib/Horde/Crypt/Pgp/Backend.php" />
+   <install as="Horde/Crypt/Pgp/Backend/Binary.php" name="lib/Horde/Crypt/Pgp/Backend/Binary.php" />
    <install as="Horde/Crypt/Pgp/Keyserver.php" name="lib/Horde/Crypt/Pgp/Keyserver.php" />
    <install as="Horde/Crypt/Pgp/Parse.php" name="lib/Horde/Crypt/Pgp/Parse.php" />
-   <install as="Horde/Crypt/Pgp/Backend/Binary.php" name="lib/Horde/Crypt/Pgp/Backend/Binary.php" />
-   <install as="locale/Horde_Crypt.pot" name="locale/Horde_Crypt.pot" />
+   <install as="Horde/Crypt/Smime.php" name="lib/Horde/Crypt/Smime.php" />
+   <install as="Horde/Crypt/Translation.php" name="lib/Horde/Crypt/Translation.php" />
+   <install as="LICENSE" name="LICENSE" />
    <install as="locale/ar/LC_MESSAGES/Horde_Crypt.mo" name="locale/ar/LC_MESSAGES/Horde_Crypt.mo" />
    <install as="locale/ar/LC_MESSAGES/Horde_Crypt.po" name="locale/ar/LC_MESSAGES/Horde_Crypt.po" />
    <install as="locale/bg/LC_MESSAGES/Horde_Crypt.mo" name="locale/bg/LC_MESSAGES/Horde_Crypt.mo" />
@@ -474,6 +467,7 @@
    <install as="locale/gl/LC_MESSAGES/Horde_Crypt.po" name="locale/gl/LC_MESSAGES/Horde_Crypt.po" />
    <install as="locale/he/LC_MESSAGES/Horde_Crypt.mo" name="locale/he/LC_MESSAGES/Horde_Crypt.mo" />
    <install as="locale/he/LC_MESSAGES/Horde_Crypt.po" name="locale/he/LC_MESSAGES/Horde_Crypt.po" />
+   <install as="locale/Horde_Crypt.pot" name="locale/Horde_Crypt.pot" />
    <install as="locale/hr/LC_MESSAGES/Horde_Crypt.mo" name="locale/hr/LC_MESSAGES/Horde_Crypt.mo" />
    <install as="locale/hr/LC_MESSAGES/Horde_Crypt.po" name="locale/hr/LC_MESSAGES/Horde_Crypt.po" />
    <install as="locale/hu/LC_MESSAGES/Horde_Crypt.mo" name="locale/hu/LC_MESSAGES/Horde_Crypt.mo" />
@@ -529,10 +523,6 @@
    <install as="Horde/Crypt/AllTests.php" name="test/Horde/Crypt/AllTests.php" />
    <install as="Horde/Crypt/bootstrap.php" name="test/Horde/Crypt/bootstrap.php" />
    <install as="Horde/Crypt/conf.php.dist" name="test/Horde/Crypt/conf.php.dist" />
-   <install as="Horde/Crypt/PgpKeyserverTest.php" name="test/Horde/Crypt/PgpKeyserverTest.php" />
-   <install as="Horde/Crypt/PgpParseTest.php" name="test/Horde/Crypt/PgpParseTest.php" />
-   <install as="Horde/Crypt/phpunit.xml" name="test/Horde/Crypt/phpunit.xml" />
-   <install as="Horde/Crypt/SmimeTest.php" name="test/Horde/Crypt/SmimeTest.php" />
    <install as="Horde/Crypt/fixtures/bug_6601.asc" name="test/Horde/Crypt/fixtures/bug_6601.asc" />
    <install as="Horde/Crypt/fixtures/clear.txt" name="test/Horde/Crypt/fixtures/clear.txt" />
    <install as="Horde/Crypt/fixtures/pgp_encrypted.txt" name="test/Horde/Crypt/fixtures/pgp_encrypted.txt" />
@@ -546,6 +536,10 @@
    <install as="Horde/Crypt/fixtures/smime_subjectAltName.pem" name="test/Horde/Crypt/fixtures/smime_subjectAltName.pem" />
    <install as="Horde/Crypt/Pgp/BinaryTest.php" name="test/Horde/Crypt/Pgp/BinaryTest.php" />
    <install as="Horde/Crypt/Pgp/TestBase.php" name="test/Horde/Crypt/Pgp/TestBase.php" />
+   <install as="Horde/Crypt/PgpKeyserverTest.php" name="test/Horde/Crypt/PgpKeyserverTest.php" />
+   <install as="Horde/Crypt/PgpParseTest.php" name="test/Horde/Crypt/PgpParseTest.php" />
+   <install as="Horde/Crypt/phpunit.xml" name="test/Horde/Crypt/phpunit.xml" />
+   <install as="Horde/Crypt/SmimeTest.php" name="test/Horde/Crypt/SmimeTest.php" />
   </filelist>
  </phprelease>
  <changelog>
@@ -1267,7 +1261,7 @@ Initial release as a PEAR package
    <stability>
     <release>stable</release>
     <api>stable</api></stability>
-   <date>2017-09-19</date>
+   <date>2017-10-17</date>
    <license uri="http://www.horde.org/licenses/lgpl21">LGPL-2.1</license>
    <notes>
 * [jan] Improve S/MIME key details formatting.
