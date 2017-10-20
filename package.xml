@@ -16,7 +16,7 @@
   <email>jan@horde.org</email>
   <active>yes</active>
  </lead>
- <date>2017-10-17</date>
+ <date>2017-10-20</date>
  <version>
   <release>2.7.11</release>
   <api>2.7.0</api>
@@ -332,7 +332,6 @@
       <file name="conf.php.dist" role="test" />
       <file name="PgpKeyserverTest.php" role="test" />
       <file name="PgpParseTest.php" role="test" />
-      <file name="phpunit.xml" role="test" />
       <file name="SmimeTest.php" role="test" />
      </dir> <!-- /test/Horde/Crypt -->
     </dir> <!-- /test/Horde -->
@@ -538,7 +537,6 @@
    <install as="Horde/Crypt/Pgp/TestBase.php" name="test/Horde/Crypt/Pgp/TestBase.php" />
    <install as="Horde/Crypt/PgpKeyserverTest.php" name="test/Horde/Crypt/PgpKeyserverTest.php" />
    <install as="Horde/Crypt/PgpParseTest.php" name="test/Horde/Crypt/PgpParseTest.php" />
-   <install as="Horde/Crypt/phpunit.xml" name="test/Horde/Crypt/phpunit.xml" />
    <install as="Horde/Crypt/SmimeTest.php" name="test/Horde/Crypt/SmimeTest.php" />
   </filelist>
  </phprelease>
@@ -1261,7 +1259,7 @@ Initial release as a PEAR package
    <stability>
     <release>stable</release>
     <api>stable</api></stability>
-   <date>2017-10-17</date>
+   <date>2017-10-20</date>
    <license uri="http://www.horde.org/licenses/lgpl21">LGPL-2.1</license>
    <notes>
 * [jan] Improve S/MIME key details formatting.
