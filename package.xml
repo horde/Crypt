@@ -16,7 +16,7 @@
   <email>jan@horde.org</email>
   <active>yes</active>
  </lead>
- <date>2017-10-20</date>
+ <date>2017-10-27</date>
  <version>
   <release>2.7.11</release>
   <api>2.7.0</api>
@@ -31,6 +31,13 @@
  </notes>
  <contents>
   <dir baseinstalldir="/" name="/">
+   <dir name="doc">
+    <dir name="Horde">
+     <dir name="Crypt">
+      <file name="CHANGES" role="doc" />
+     </dir> <!-- /doc/Horde/Crypt -->
+    </dir> <!-- /doc/Horde -->
+   </dir> <!-- /doc -->
    <dir name="lib">
     <dir name="Horde">
      <dir name="Crypt">
@@ -424,6 +431,7 @@
  </dependencies>
  <phprelease>
   <filelist>
+   <install as="CHANGES" name="doc/Horde/Crypt/CHANGES" />
    <install as="Horde/Crypt.php" name="lib/Horde/Crypt.php" />
    <install as="Horde/Crypt/Exception.php" name="lib/Horde/Crypt/Exception.php" />
    <install as="Horde/Crypt/Pgp.php" name="lib/Horde/Crypt/Pgp.php" />
@@ -1259,7 +1267,7 @@
    <stability>
     <release>stable</release>
     <api>stable</api></stability>
-   <date>2017-10-20</date>
+   <date>2017-10-27</date>
    <license uri="http://www.horde.org/licenses/lgpl21">LGPL-2.1</license>
    <notes>
 * [jan] Improve S/MIME key details formatting.

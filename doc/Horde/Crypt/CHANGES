@@ -1,0 +1,417 @@
+-----------
+v2.7.11-git
+-----------
+
+[jan] Improve S/MIME key details formatting.
+
+
+-------
+v2.7.10
+-------
+
+[jan] Correctly determine expiration dates of short living PGP keys.
+
+
+------
+v2.7.9
+------
+
+[jan] More fixes for GnuPG 2 (Mathieu Parent <math.parent@gmail.com>).
+[jan] Remove dependency on openssl executable (Hadi Nategh
+      <hnategh@gmail.com>).
+
+
+------
+v2.7.8
+------
+
+[jan] Detect unsupported GnuPG versions.
+[jan] Fix detection of new GnuPG API (Remi Collet <remi@remirepo.net>, PR
+      #220).
+
+
+------
+v2.7.7
+------
+
+[mjr] Correctly specify either sha-1 or sha-256 when signing a smime message.
+[jan] Support GnuPG 2.1+ too (Bug #14014).
+
+
+------
+v2.7.6
+------
+
+[mjr] SECURITY: Fix remote code execution vulnerability (CVE-2017-7413, and
+      CVE-2017-7414).
+
+
+------
+v2.7.5
+------
+
+[jan] Fix label for S/MIME Encrypted Key Usage attribute.
+
+
+------
+v2.7.4
+------
+
+[mjr] Ensure version information is output in ASCII armored output.
+[jan] Fix parsing inline signed PGP messages with PHP 7+ (Bug #14352).
+
+
+------
+v2.7.3
+------
+
+[jan] Work around broken PGP key servers.
+
+
+------
+v2.7.2
+------
+
+[jan] Fix throwing exception if verifying a PGP signature failed.
+
+
+------
+v2.7.1
+------
+
+[jan] Update Greek translation (Limperis Antonis <limperis@cti.gr>).
+[jan] Try three times to retrieve public PGP if the keyserver pool contains
+      broken servers.
+
+
+------
+v2.7.0
+------
+
+[jan] Add Horde_Crypt_Pgp::pgpPacketInformationMultiple() and
+      Horde_Crypt_Pgp_Backend_Binary::packetInfoMultiple() (Request #13190).
+[jan] Fix retrieving PGP keys from the keyserver with certain HTTP client
+      backends.
+[jan] Fix creating PGP keys with comments (Bug #14125).
+[jan] Mark PHP 7 as supported.
+
+
+------
+v2.6.1
+------
+
+[mjr] Fix PHP 5.3 incompatibility (Bug #14090).
+
+
+------
+v2.6.0
+------
+
+[jan] Updated UK translation.
+[jan] Fix issues with certain locales like Turkish.
+[mms] Split gnupg command-line binary specific code out into a separate PGP
+      backend driver.
+[mms] S/MIME encryption is now done only with AES (if using PHP 5.4+) or 3DES.
+
+
+------
+v2.5.3
+------
+
+[jan] Make all PGP features locale-independent.
+
+
+------
+v2.5.2
+------
+
+[mms] Fix parsing GPG packet information using the gnupg v2.1 binary.
+
+
+------
+v2.5.1
+------
+
+[jan] Fix using non-deprecated Content-Type for encrypted messages (Bug
+      #13659).
+
+
+------
+v2.5.0
+------
+
+[mms] Fix reference to constant outside of the package.
+
+
+------
+v2.4.3
+------
+
+[jan] Update Hungarian translation (Andras Galos <galosa@netinform.hu>).
+
+
+------
+v2.4.2
+------
+
+[jan] Update Korean translation (Deokgon Kim <dgkim@dgkim.net>).
+
+
+------
+v2.4.1
+------
+
+[mms] Ensure that all text parts are Q-P encoded when signing a MIME part.
+[mms] More efficient parsing in Horde_Crypt_Pgp_Parse.
+
+
+------
+v2.4.0
+------
+
+[mms] Remove Horde_Crypt_Pgp#generateRevocation() (Bug #7375).
+[mms] Fix submitting PGP keys to a public keyserver (Bug #10931).
+[mms] PGP keyserver code now uses Horde_Http_Client to connect to the
+      keyserver.
+[mms] Move PGP keyserver code to a separate Horde_Crypt_Pgp_Keyserver class.
+[mms] Add Horde_Crypt_Pgp_Parse#parseToPart().
+[mms] Move Horde_Crypt_Pgp#parsePGPData() to separate class
+      (Horde_Crypt_Pgp_Parse), since it can be used even if GnuPG binary is
+      not available.
+
+
+------
+v2.3.0
+------
+
+[mms] Horde_Crypt_Pgp#parsePGPData() now accepts a Horde_Stream object as an
+      argument.
+
+
+------
+v2.2.2
+------
+
+[jan] Fix detecting bad PGP signatures on some systems with non-English locales
+      (Bug #10273).
+
+
+------
+v2.2.1
+------
+
+[mms] SECURITY: Fix XSS vulnerability in Horde_Crypt_Smime#certToHTML() (João
+      Machado <geral@jpaulo.eu>).
+
+
+------
+v2.2.0
+------
+
+[mms] Fix Horde_Crypt_Pgp#encryptedSymmetrically() from entering an infinite
+      loop when using GnuPg v2.
+[mms] Improve security in PGP key generation (Request #12099).
+
+
+------
+v2.1.3
+------
+
+[jan] Change default keyserver to pool.sks-keyservers.net.
+[jan] Fix finding key ID for an email address on a keyserver (o@immerda.ch).
+
+
+------
+v2.1.2
+------
+
+[jan] Update French translation (Paul De Vlieger
+      <paul.de_vlieger@moniut.univ-bpclermont.fr>).
+
+
+------
+v2.1.1
+------
+
+[jan] Update Basque translation (Ibon Igartua <ibon.igartua@ehu.es>).
+
+
+------
+v2.1.0
+------
+
+[jan] Update Dutch translation (Arjen de Korte <build+horde@de-korte.org>).
+[mms] Add Horde_Crypt_Pgp#getPublicKeyFromPrivateKey().
+
+
+------
+v2.0.0
+------
+
+First stable release for Horde 5.
+
+
+---------
+v2.0.0RC1
+---------
+
+[jan] Throw exception if parsing of S/MIME certificates fails (Bug #11530).
+
+
+-----------
+v2.0.0beta2
+-----------
+
+[mms] Improvements in obtaining GPG keys from a keyserver (Bug #11380)
+      (o+horde@immerda.ch).
+
+
+-----------
+v2.0.0beta1
+-----------
+
+First beta release for Horde 5.
+
+
+------------
+v2.0.0alpha1
+------------
+
+First alpha release for Horde 5.
+
+
+------
+v1.1.3
+------
+
+[jan] Throw exception if parsing of S/MIME certificates fails (Bug #11530).
+[mms] Improvements in obtaining GPG keys from a keyserver (Bug #11380)
+      (o+horde@immerda.ch).
+
+
+------
+v1.1.2
+------
+
+[jan] Fix HTML rendering of S/MIME certificates with multi-value attributes.
+
+
+------
+v1.1.1
+------
+
+[mms] Improved parsing of S/MIME certificate information (Bug #10956).
+[mms] Silently ignore unknown data when parsing S/MIME certificates.
+
+
+------
+v1.1.0
+------
+
+[mms] Provide signature information when decrypting a message, rather than just
+      a boolean result.
+[mms] Fix displaying PGP key expiration information.
+[mms] Allow expiration date to be given to Horde_Crypt_Pgp#generateKey()
+      (Request #5754).
+
+
+------
+v1.0.6
+------
+
+[jan] Update Croatian translation.
+[jan] Update Estonian translation.
+[mms] Upgrade signed S/MIME output to comply with S/MIME version 3.2.
+
+
+------
+v1.0.5
+------
+
+[mms] Encrypted data is already base64 encoded (Bug #10285).
+
+
+------
+v1.0.4
+------
+
+[jan] Update Latvian translation.
+[jan] Allow to specify body charset when verifying PGP signed messages.
+[jan] Update Lithuanian translation.
+[jan] Update Brazilian Portuguese translation.
+[mms] Use strongest cipher possible when encrypting S/MIME data (Request
+      #10246).
+
+
+------
+v1.0.3
+------
+
+[jan] Updated Slovak translation.
+
+
+------
+v1.0.2
+------
+
+[jan] Updated Spanish translation.
+
+
+------
+v1.0.1
+------
+
+[jan] Fix package.xml syntax.
+
+
+------
+v1.0.0
+------
+
+First stable release for Horde 4.
+
+
+---------
+v1.0.0RC2
+---------
+
+Second release candidate for Horde 4.
+
+
+---------
+v1.0.0RC1
+---------
+
+First release candidate for Horde 4.
+
+
+-----------
+v1.0.0beta1
+-----------
+
+First beta release for Horde 4.
+
+
+------------
+v1.0.0alpha1
+------------
+
+First alpha release for Horde 4.
+Add Horde_Crypt_Exception.
+Better error handling for gnupg and openssl command line binaries.
+
+
+------
+v0.0.2
+------
+
+Converted to package.xml 2.0 for pear.horde.org
+Added support for email addresses in subjectAltName of S/MIME certs (Bug #5986)
+Improved support for PGP fingerprints (Bug #6363)
+
+
+------
+v0.0.1
+------
+
+Initial release as a PEAR package
