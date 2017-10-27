@@ -7,3 +7,44 @@ description: >
   systems.
 list: dev
 type: library
+homepage: https://www.horde.org/libraries/Horde_Crypt
+authors:
+  -
+    name: Michael Slusarz
+    user: slusarz
+    email: slusarz@horde.org
+    active: true
+    role: lead
+  -
+    name: Jan Schneider
+    user: jan
+    email: jan@horde.org
+    active: true
+    role: lead
+version:
+  release: 2.7.12
+  api: 2.7.0
+state:
+  release: stable
+  api: stable
+license:
+  identifier: LGPL-2.1
+  uri: http://www.horde.org/licenses/lgpl21
+dependencies:
+  required:
+    php: ^5.3 || ^7
+    pear:
+      pear.horde.org/Horde_Exception: ^2
+      pear.horde.org/Horde_Http: ^2
+      pear.horde.org/Horde_Mime: ^2
+      pear.horde.org/Horde_Stream: ^1.5
+      pear.horde.org/Horde_Stream_Filter: ^2
+      pear.horde.org/Horde_Translation: ^2.2
+      pear.horde.org/Horde_Url: ^2
+      pear.horde.org/Horde_Util: ^2
+    ext:
+      hash: '*'
+      openssl: '*'
+  optional:
+    pear:
+      pear.horde.org/Horde_Test: ^2.1
