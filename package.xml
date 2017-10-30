@@ -16,7 +16,7 @@
   <email>jan@horde.org</email>
   <active>yes</active>
  </lead>
- <date>2017-10-09</date>
+ <date>2017-10-30</date>
  <version>
   <release>2.7.12</release>
   <api>2.7.0</api>
@@ -34,6 +34,7 @@
    <dir name="doc">
     <dir name="Horde">
      <dir name="Crypt">
+      <file name="CHANGES" role="doc" />
       <file name="COPYING" role="doc" />
      </dir> <!-- /doc/Horde/Crypt -->
     </dir> <!-- /doc/Horde -->
@@ -431,6 +432,7 @@
  </dependencies>
  <phprelease>
   <filelist>
+   <install as="CHANGES" name="doc/Horde/Crypt/CHANGES" />
    <install as="COPYING" name="doc/Horde/Crypt/COPYING" />
    <install as="Horde/Crypt.php" name="lib/Horde/Crypt.php" />
    <install as="Horde/Crypt/Exception.php" name="lib/Horde/Crypt/Exception.php" />
@@ -1280,7 +1282,7 @@
    <stability>
     <release>stable</release>
     <api>stable</api></stability>
-   <date>2017-10-09</date>
+   <date>2017-10-30</date>
    <license uri="http://www.horde.org/licenses/lgpl21">LGPL-2.1</license>
    <notes>
 * 
