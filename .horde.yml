@@ -10,16 +10,16 @@ type: library
 homepage: https://www.horde.org/libraries/Horde_Crypt
 authors:
   -
-    name: Michael Slusarz
-    user: slusarz
-    email: slusarz@horde.org
-    active: true
-    role: lead
-  -
     name: Jan Schneider
     user: jan
     email: jan@horde.org
     active: true
+    role: lead
+  -
+    name: Michael Slusarz
+    user: slusarz
+    email: slusarz@horde.org
+    active: false
     role: lead
 version:
   release: 2.7.11
