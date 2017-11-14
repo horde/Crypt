@@ -1,23 +1,23 @@
 {
     "name": "horde/crypt",
-    "description": "Horde Cryptography API",
+    "description": "Cryptography library",
     "type": "library",
-    "homepage": "https://pear.horde.org",
+    "homepage": "https://www.horde.org/libraries/Horde_Crypt",
     "license": "LGPL-2.1",
     "authors": [
-        {
-            "name": "Michael Slusarz",
-            "email": "slusarz@horde.org",
-            "role": "lead"
-        },
         {
             "name": "Jan Schneider",
             "email": "jan@horde.org",
             "role": "lead"
+        },
+        {
+            "name": "Michael Slusarz",
+            "email": "slusarz@horde.org",
+            "role": "lead"
         }
     ],
     "version": "2.7.12",
-    "time": "2017-10-09",
+    "time": "2017-11-14",
     "repositories": [
         {
             "type": "pear",
