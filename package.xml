@@ -340,7 +340,6 @@
       <file name="conf.php.dist" role="test" />
       <file name="PgpKeyserverTest.php" role="test" />
       <file name="PgpParseTest.php" role="test" />
-      <file name="phpunit.xml" role="test" />
       <file name="SmimeTest.php" role="test" />
      </dir> <!-- /test/Horde/Crypt -->
     </dir> <!-- /test/Horde -->
@@ -533,7 +532,6 @@
    <install as="Horde/Crypt/conf.php.dist" name="test/Horde/Crypt/conf.php.dist" />
    <install as="Horde/Crypt/PgpKeyserverTest.php" name="test/Horde/Crypt/PgpKeyserverTest.php" />
    <install as="Horde/Crypt/PgpParseTest.php" name="test/Horde/Crypt/PgpParseTest.php" />
-   <install as="Horde/Crypt/phpunit.xml" name="test/Horde/Crypt/phpunit.xml" />
    <install as="Horde/Crypt/SmimeTest.php" name="test/Horde/Crypt/SmimeTest.php" />
    <install as="Horde/Crypt/fixtures/bug_6601.asc" name="test/Horde/Crypt/fixtures/bug_6601.asc" />
    <install as="Horde/Crypt/fixtures/clear.txt" name="test/Horde/Crypt/fixtures/clear.txt" />
