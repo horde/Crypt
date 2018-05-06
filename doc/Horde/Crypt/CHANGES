@@ -1,7 +1,8 @@
------------
-v2.7.11-git
------------
+-------
+v2.7.11
+-------
 
+[mjr] Fix detecting digest algo properly (Bug #14814)
 [jan] Improve S/MIME key details formatting.
 
 
