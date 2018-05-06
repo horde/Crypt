@@ -327,7 +327,7 @@ extends Horde_Crypt_Pgp_Backend
                     continue;
                 }
 
-                if (preg_match('/digest algo\s+(\d{1})/', $line, $matches)) {
+                if (preg_match('/digest algo\s+(\d{1,2})/', $line, $matches)) {
                     $micalg = $hashAlg[$matches[1]];
                     $out[$key_idx]['signature'][$header]['sig_' . $sig_id]['micalg'] = $micalg;
                     if ($header == '_SIGNATURE') {

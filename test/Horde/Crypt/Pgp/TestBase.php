@@ -639,6 +639,19 @@ Version: GnuPG %s
         );
     }
 
+    /**
+     * @dataProvider backendProvider
+     */
+    public function testDetectingDigestAlgoBug14814($pgp)
+    {
+        $fixture = $this->_getFixture('test_digest_algo.txt');
+        $packetInfo = $pgp->pgpPacketInformation($fixture);
+        $this->assertEquals(
+            'pgp-sha512',
+            $packetInfo['signature']['_SIGNATURE']['micalg']
+        );
+    }
+
     /* Helper methods. */
 
     protected function _getFixture($file)
