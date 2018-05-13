@@ -1,4 +1,11 @@
 -------
+v2.7.12
+-------
+
+[mjr] Fix detecting digest algo properly (Bug #14814).
+
+
+-------
 v2.7.11
 -------
 
