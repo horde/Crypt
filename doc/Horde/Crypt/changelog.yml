@@ -1,4 +1,16 @@
 ---
+2.7.12:
+  api: 2.7.0
+  state:
+    release: stable
+    api: stable
+  date: 2018-05-13
+  license:
+    identifier: LGPL-2.1
+    uri: http://www.horde.org/licenses/lgpl21
+  notes: |
+    [mjr] Fix detecting digest algo properly (Bug #14814).
+    |+
 2.7.11:
   api: 2.7.0
   state:
