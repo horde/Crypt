@@ -28,7 +28,6 @@
  <license uri="http://www.horde.org/licenses/lgpl21">LGPL-2.1</license>
  <notes>
 * [mjr] Fix detecting digest algo properly (Bug #14814).
-* |+
  </notes>
  <contents>
   <dir baseinstalldir="/" name="/">
@@ -1377,7 +1376,6 @@
    <license uri="http://www.horde.org/licenses/lgpl21">LGPL-2.1</license>
    <notes>
 * [mjr] Fix detecting digest algo properly (Bug #14814).
-* |+
    </notes>
   </release>
  </changelog>
