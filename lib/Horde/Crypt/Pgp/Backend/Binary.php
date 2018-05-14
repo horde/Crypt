@@ -567,6 +567,7 @@ extends Horde_Crypt_Pgp_Backend
             true
         );
         $this->_ensureResult($result);
+        $this->_ensureDecryptionOk($result);
 
         return $this->_checkSignatureResult($result->stderr, $result->output);
     }
@@ -685,11 +686,15 @@ extends Horde_Crypt_Pgp_Backend
         $data->output = null;
         $data->stderr = null;
         $data->stdout = null;
+        $data->status = null;
 
         /* Verbose output? */
         if (!$verbose) {
             array_unshift($options, '--quiet');
         }
+
+        $status_file = $this->_createTempFile('horde-pgp-stat', false);
+        array_unshift($options, '--status-file ' . $status_file);
 
         /* Create temp files for output. */
         if ($output) {
@@ -750,6 +755,9 @@ extends Horde_Crypt_Pgp_Backend
             }
         }
         pclose($fp);
+
+        $data->status = file_get_contents($status_file);
+        unlink($status_file);
 
         if ($output) {
             $data->output = file_get_contents($output_file);
@@ -840,6 +848,27 @@ extends Horde_Crypt_Pgp_Backend
     protected function _ensureResult($result)
     {
         if (empty($result->output) && empty($result->stdout)) {
+            throw new Horde_Crypt_Exception(
+                preg_replace(
+                    array('/^gpg: /', '/\n/'),
+                    array('', '. '),
+                    $result->stderr
+                )
+            );
+        }
+    }
+
+    /**
+     * Checks whether the decryption succeeded.
+     *
+     * @param object $result  A result from _callGpg().
+     *
+     * @throws Horde_Crypt_Exception with messages from stderr if the result
+     *                               is not a successful decryption.
+     */
+    protected function _ensureDecryptionOk($result)
+    {
+        if (!preg_match("/DECRYPTION_OKAY/", $result->status)) {
             throw new Horde_Crypt_Exception(
                 preg_replace(
                     array('/^gpg: /', '/\n/'),
