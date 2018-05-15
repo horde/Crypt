@@ -848,7 +848,7 @@ extends Horde_Crypt_Pgp_Backend
      */
     protected function _ensureResult($result)
     {
-        if (empty($result->output) && empty($result->stdout)) {
+        if (!empty($result->stderr)) {
             throw new Horde_Crypt_Exception(
                 preg_replace(
                     array('/^gpg: /', '/\n/'),
