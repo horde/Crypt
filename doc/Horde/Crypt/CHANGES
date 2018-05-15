@@ -2,7 +2,7 @@
 v2.7.13
 -------
 
-[jan] Enforce MDC verification when decrypting PGP messages to mitigatet EFAIL
+[jan] Enforce MDC verification when decrypting PGP messages to mitigate EFAIL
       attacks (Immerda <admin@immerda.ch>).
 |+
 
