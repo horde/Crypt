@@ -652,6 +652,79 @@ Version: GnuPG %s
         );
     }
 
+    /**
+     * @dataProvider backendProvider
+     */
+    public function testMdcCorrect($pgp)
+    {
+        $this->_testMdc($pgp, 'correct');
+    }
+
+    /**
+     * @dataProvider backendProvider
+     */
+    public function testMdcCorrectWithoutCrc($pgp)
+    {
+        $this->_testMdc($pgp, 'correct-withoutcrc');
+    }
+
+    /**
+     * @expectedException Horde_Crypt_Exception
+     * @expectedExceptionMessage Could not decrypt PGP data.
+     * @dataProvider backendProvider
+     */
+    public function testMdcWithoutMdc($pgp)
+    {
+        $this->_testMdc($pgp, 'withoutmdc');
+    }
+
+    /**
+     * @expectedException Horde_Crypt_Exception
+     * @expectedExceptionMessage Could not decrypt PGP data.
+     * @dataProvider backendProvider
+     */
+    public function testMdcManipulatedWithoutMdc($pgp)
+    {
+        $this->_testMdc($pgp, 'manipulated-withoutmdc');
+    }
+
+    /**
+     * @expectedException Horde_Crypt_Exception
+     * @expectedExceptionMessage Could not decrypt PGP data.
+     * @dataProvider backendProvider
+     */
+    public function testMdcWrongMdc($pgp)
+    {
+        $this->_testMdc($pgp, 'wrongmdc');
+    }
+
+    /**
+     * @expectedException Horde_Crypt_Exception
+     * @expectedExceptionMessage Could not decrypt PGP data.
+     * @dataProvider backendProvider
+     */
+    public function testMdcManipulated($pgp)
+    {
+        $this->_testMdc($pgp, 'manmessage');
+    }
+
+    protected function _testMdc($pgp, $fixture)
+    {
+        $crypt = $this->_getFixture('mdc/' . $fixture);
+
+        $decrypt = $pgp->decrypt($crypt, array(
+            'passphrase' => '',
+            'privkey' => $this->_getFixture('mdc/secret-key.gpg'),
+            'pubkey' => $this->_getFixture('mdc/public-key.gpg'),
+            'type' => 'message'
+        ));
+
+        $this->assertStringEqualsFile(
+            dirname(__DIR__) . '/fixtures/mdc/testmessage',
+            $decrypt->message
+        );
+    }
+
     /* Helper methods. */
 
     protected function _getFixture($file)
@@ -668,5 +741,4 @@ Version: GnuPG %s
     {
         return $this->_getFixture('pgp_public.asc');
     }
-
 }
