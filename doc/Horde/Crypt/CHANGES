@@ -2,7 +2,9 @@
 v2.7.13
 -------
 
-
+[jan] Enforce MDC verification when decrypting PGP messages to mitigate EFAIL
+      attacks (Immerda <admin@immerda.ch>).
+|+
 
 
 -------
@@ -190,8 +192,8 @@ v2.4.0
 [mms] Move PGP keyserver code to a separate Horde_Crypt_Pgp_Keyserver class.
 [mms] Add Horde_Crypt_Pgp_Parse#parseToPart().
 [mms] Move Horde_Crypt_Pgp#parsePGPData() to separate class
-      (Horde_Crypt_Pgp_Parse), since it can be used even if GnuPG binary is
-      not available.
+      (Horde_Crypt_Pgp_Parse), since it can be used even if GnuPG binary is not
+      available.
 
 
 ------
