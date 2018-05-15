@@ -474,6 +474,7 @@ extends Horde_Crypt_Pgp_Backend
             }
         } else {
             $cmdline[] = '--symmetric';
+            $cmdline[] = '--force-mdc';
             $cmdline[] = '--passphrase-fd 0';
         }
         $cmdline[] = $input;
