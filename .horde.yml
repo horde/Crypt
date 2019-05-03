@@ -3,7 +3,7 @@ id: Crypt
 name: Crypt
 full: Cryptography library
 description: >-
-  The Horde_Crypt package class provides an API for various cryptographic
+  A library that provides wrappers for various cryptographic
   systems.
 list: dev
 type: library
