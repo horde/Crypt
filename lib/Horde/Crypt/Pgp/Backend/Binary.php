@@ -119,21 +119,42 @@ extends Horde_Crypt_Pgp_Backend
             ? 0
             : 'seconds=' . ($opts['expire'] - time());
 
+        $input = array();
+
+        if (!$this->_gnupg21) {
+            /*
+             * %secring and %pubring have been deprecated since GnuPG 2.1 and %secring% is not available
+             * anymore starting with GnuPG 2.2. For GnuPG 2.1 and above, we need to export
+             * the secret and the public key from the keyrings in the ephemeral home directory
+             * instead. See:
+             * https://www.gnupg.org/documentation/manuals/gnupg/Unattended-GPG-key-generation.html
+             */
+            $input = array_merge(
+                $input,
+                array(
+                    '%secring '. $sec_file,
+                    '%pubring ' . $pub_file,
+                )
+            );
+        }
+
         /* Create the config file necessary for GnuPG to run in batch mode. */
         /* TODO: Sanitize input, More user customizable? */
-        $input = array(
-            '%pubring ' . $pub_file,
-            '%secring ' . $secret_file,
-            'Key-Type: ' . $opts['key_type'],
-            'Key-Length: ' . $opts['keylength'],
-            'Subkey-Type: ' . $opts['subkey_type'],
-            'Subkey-Length: ' . $opts['keylength'],
-            'Name-Real: ' . $opts['name'],
-            'Name-Email: ' . $opts['email'],
-            'Expire-Date: ' . $expire,
-            'Passphrase: ' . $opts['passphrase'],
-            'Preferences: AES256 AES192 AES CAST5 3DES SHA256 SHA512 SHA384 SHA224 SHA1 ZLIB BZIP2 ZIP Uncompressed'
+        $input = array_merge (
+            $input,
+            array(
+                'Key-Type: ' . $opts['key_type'],
+                'Key-Length: ' . $opts['keylength'],
+                'Subkey-Type: ' . $opts['subkey_type'],
+                'Subkey-Length: ' . $opts['keylength'],
+                'Name-Real: ' . $opts['name'],
+                'Name-Email: ' . $opts['email'],
+                'Expire-Date: ' . $expire,
+                'Passphrase: ' . $opts['passphrase'],
+                'Preferences: AES256 AES192 AES CAST5 3DES SHA256 SHA512 SHA384 SHA224 SHA1 ZLIB BZIP2 ZIP Uncompressed'
+            )
         );
+
         if (!empty($opts['comment'])) {
             $input[] = 'Name-Comment: ' . $opts['comment'];
         }
@@ -152,9 +173,46 @@ extends Horde_Crypt_Pgp_Backend
             true
         );
 
-        /* Get the keys from the temp files. */
-        $public_key = file_get_contents($pub_file);
-        $secret_key = file_get_contents($secret_file);
+        if ($this->_gnupg21) {
+
+            /* Export public key from the ephemeral home dir (see comment above for details). */
+
+            $result = $this->_callGpg(
+                array(
+                    '--export',
+                    '--armor'
+                ),
+                'r',
+                array(),
+                true,
+                true
+            );
+            $this->_ensureResult($result);
+            $public_key = $result->output;
+
+            /* Export secret key from the ephemeral home dir (see comment above for details). */
+
+            $result = $this->_callGpg(
+                array(
+                    '--export-secret-key',
+                    '--passphrase "'.$opts['passphrase'].'"',
+                    '--armor'
+                ),
+                'r',
+                array(),
+                true,
+                true
+            );
+            $this->_ensureResult($result);
+            $secret_key = $result->output;
+
+        } else {
+
+            /* Get the keys from the temp files. */
+            $public_key = file_get_contents($pub_file);
+            $secret_key = file_get_contents($secret_file);
+
+        }
 
         /* If either key is empty, something went wrong. */
         if (empty($public_key) || empty($secret_key)) {
