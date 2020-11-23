@@ -68,7 +68,7 @@ class Horde_Crypt_Pgp extends Horde_Crypt
      * @throws Horde_Crypt_Exception
      */
     public function generateKey($realname, $email, $passphrase, $comment = '',
-                                $keylength = 1024, $expire = null,
+                                $keylength = 4096, $expire = null,
                                 $key_type = 'RSA', $subkey_type = 'RSA')
     {
         $this->_initDrivers();
