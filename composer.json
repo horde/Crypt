@@ -26,20 +26,20 @@
     ],
     "require": {
         "horde/horde-installer-plugin": "*",
-        "php": "^5.3 || ^7",
-        "horde/exception": "^2",
-        "horde/http": "^2",
-        "horde/mime": "^2",
-        "horde/stream": "^1.5",
-        "horde/stream_filter": "^2",
-        "horde/translation": "^2.2",
-        "horde/url": "^2",
-        "horde/util": "^2",
+        "php": "^7",
+        "horde/exception": "^3",
+        "horde/http": "^3",
+        "horde/mime": "^3",
+        "horde/stream": "^2",
+        "horde/stream_filter": "^3",
+        "horde/translation": "^3",
+        "horde/url": "^3",
+        "horde/util": "^3",
         "ext-hash": "*",
         "ext-openssl": "*"
     },
     "suggest": {
-        "horde/test": "^2.1"
+        "horde/test": "^3"
     },
     "autoload": {
         "psr-0": {
