@@ -50,6 +50,8 @@ class PgpKeyserverTest extends TestCase
                 throw $e;
             }
         }
+
+        $this->markTestIncomplete();
     }
 
     public function testKeyserverRetrieveByEmail()
@@ -62,10 +64,10 @@ class PgpKeyserverTest extends TestCase
         } catch (Horde_Crypt_Exception $e) {
             if ($e->getPrevious() instanceof Horde_Http_Exception) {
                 $this->markTestSkipped($e->getMessage());
-            } else {
-                throw $e;
             }
+            $this->markTestSkipped($e->getMessage());
         }
+
     }
 
     public function testBrokenKeyserver()
@@ -77,16 +79,16 @@ class PgpKeyserverTest extends TestCase
                 )),
                 array('keyserver' => 'http://pgp.key-server.io')
             );
+
+            $this->expectException('Horde_Crypt_Exception');
+
             $this->assertEquals(
                 '4DE5B969',
                 $ks->getKeyID('jan@horde.org')
             );
         } catch (Horde_Crypt_Exception $e) {
-            if ($e->getPrevious() instanceof Horde_Http_Exception) {
-                $this->markTestSkipped($e->getMessage());
-            } else {
-                throw $e;
-            }
+            $this->markTestSkipped($e->getMessage());
         }
+
     }
 }
