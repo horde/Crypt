@@ -8,11 +8,16 @@
  * @package    Crypt
  * @subpackage UnitTests
  */
-class Horde_Crypt_PgpParseTest extends Horde_Test_Case
+namespace Horde\Crypt;
+use Horde_Test_Case as TestCase;
+use Horde_Crypt_Pgp;
+use Horde_Stream_Temp;
+
+class PgpParseTest extends TestCase
 {
     protected $_pgp;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->_pgp = new Horde_Crypt_Pgp();
     }

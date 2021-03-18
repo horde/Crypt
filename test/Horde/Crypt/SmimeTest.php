@@ -9,10 +9,13 @@
  * @package    Crypt
  * @subpackage UnitTests
  */
+namespace Horde\Crypt;
+use Horde_Test_Case as TestCase;
+use \Horde_Crypt;
 
-class Horde_Crypt_SmimeTest extends Horde_Test_Case
+class SmimeTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!extension_loaded('openssl')) {
             $this->markTestSkipped('No openssl support in PHP.');

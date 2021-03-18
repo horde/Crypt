@@ -8,13 +8,17 @@
  * @package    Crypt
  * @subpackage UnitTests
  */
+namespace Horde\Crypt;
+use Horde_Test_Case as TestCase;
+use \Horde_Crypt_Pgp_Keyserver;
+use \Horde_Crypt;
 
-class Horde_Crypt_PgpKeyserverTest extends Horde_Test_Case
+class PgpKeyserverTest extends TestCase
 {
     protected $_ks;
     protected $_gnupg;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $c = self::getConfig('CRYPT_TEST_CONFIG', __DIR__);
         $this->_gnupg = isset($c['gnupg'])
@@ -66,13 +70,13 @@ class Horde_Crypt_PgpKeyserverTest extends Horde_Test_Case
 
     public function testBrokenKeyserver()
     {
-        $ks = new Horde_Crypt_Pgp_Keyserver(
-            Horde_Crypt::factory('Pgp', array(
-                'program' => $this->_gnupg
-            )),
-            array('keyserver' => 'http://pgp.key-server.io')
-        );
         try {
+            $ks = new Horde_Crypt_Pgp_Keyserver(
+                Horde_Crypt::factory('Pgp', array(
+                    'program' => $this->_gnupg
+                )),
+                array('keyserver' => 'http://pgp.key-server.io')
+            );
             $this->assertEquals(
                 '4DE5B969',
                 $ks->getKeyID('jan@horde.org')
