@@ -10,8 +10,11 @@
  * @package    Crypt
  * @subpackage UnitTests
  */
-class Horde_Crypt_Pgp_BinaryTest
-extends Horde_Crypt_Pgp_TestBase
+namespace Horde\Crypt\Pgp;
+use Horde_Crypt_Pgp_TestBase as TestBase;
+use \Horde_Crypt_Pgp_Backend_Binary;
+
+class BinaryTest extends TestBase
 {
     protected function _setUp()
     {
