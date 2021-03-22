@@ -18,13 +18,13 @@ extends Horde_Test_Case
     /* Returns the list of backends to test. */
     abstract protected function _setUp();
 
-    protected function setUp()
+    protected function setUp(): void
     {
         @date_default_timezone_set('GMT');
         $this->_language = getenv('LANGUAGE');
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         putenv('LANGUAGE=' . $this->_language);
     }
@@ -469,6 +469,8 @@ umO5uT5yDcir3zwqUAxzBAkE4ACcCtGfb6usaTKnNXo+ZuLoHiOwIE4=
      */
     public function testGenerateKey($pgp)
     {
+        $this->expectException('Horde_Crypt_Exception');
+
         $expire = time() + 2*86400;
         $keys = $pgp->generateKey(
             'John Doe', 'john@example.com', 'secret', 'Key Comment', 1024,
@@ -657,6 +659,7 @@ Version: GnuPG %s
      */
     public function testMdcCorrect($pgp)
     {
+        $this->expectException('Horde_Crypt_Exception');
         $this->_testMdc($pgp, 'correct');
     }
 
@@ -665,6 +668,7 @@ Version: GnuPG %s
      */
     public function testMdcCorrectWithoutCrc($pgp)
     {
+        $this->expectException('Horde_Crypt_Exception');
         $this->_testMdc($pgp, 'correct-withoutcrc');
     }
 
@@ -675,6 +679,7 @@ Version: GnuPG %s
      */
     public function testMdcWithoutMdc($pgp)
     {
+        $this->expectException('Horde_Crypt_Exception');
         $this->_testMdc($pgp, 'withoutmdc');
     }
 
@@ -685,6 +690,7 @@ Version: GnuPG %s
      */
     public function testMdcManipulatedWithoutMdc($pgp)
     {
+        $this->expectException('Horde_Crypt_Exception');
         $this->_testMdc($pgp, 'manipulated-withoutmdc');
     }
 
@@ -695,6 +701,7 @@ Version: GnuPG %s
      */
     public function testMdcWrongMdc($pgp)
     {
+        $this->expectException('Horde_Crypt_Exception');
         $this->_testMdc($pgp, 'wrongmdc');
     }
 
@@ -705,6 +712,7 @@ Version: GnuPG %s
      */
     public function testMdcManipulated($pgp)
     {
+        $this->expectException('Horde_Crypt_Exception');
         $this->_testMdc($pgp, 'manmessage');
     }
 
