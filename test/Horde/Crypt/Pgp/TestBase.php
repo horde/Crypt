@@ -10,8 +10,12 @@
  * @package    Crypt
  * @subpackage UnitTests
  */
-abstract class Horde_Crypt_Pgp_TestBase
-extends Horde_Test_Case
+namespace Horde\Crypt\Pgp;
+use \Horde_Test_Case as TestCase;
+use \Horde_Crypt;
+use \Horde_String;
+
+abstract class TestBase extends TestCase
 {
     private $_language;
 
