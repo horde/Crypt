@@ -50,7 +50,7 @@ class Horde_Crypt_Smime extends Horde_Crypt
             ? openssl_pkey_get_private($private_key)
             : openssl_pkey_get_private($private_key, $passphrase);
 
-        return is_resource($res);
+        return ($res !== false);
     }
 
     /**
