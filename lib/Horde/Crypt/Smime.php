@@ -543,7 +543,7 @@ class Horde_Crypt_Smime extends Horde_Crypt
                  htmlspecialchars(
                      isset($fieldnames[$key]) ? $fieldnames[$key] : $key
                  ),
-                htmlspecialchars($value)
+                htmlspecialchars(implode(', ', (array)$value))
             );
         }
         $text .= "\n";
