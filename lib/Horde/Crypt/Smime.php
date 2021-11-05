@@ -553,6 +553,7 @@ class Horde_Crypt_Smime extends Horde_Crypt
             '<strong>' . Horde_Crypt_Translation::t("Issuer") . ':</strong>';
 
         foreach ($details['issuer'] as $key => $value) {
+            if (is_array($value)) $value = implode(', ', $value);
             $text .= sprintf(
                 "\n&nbsp;&nbsp;%s: %s",
                 htmlspecialchars(
