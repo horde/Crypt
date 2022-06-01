@@ -789,6 +789,9 @@ extends Horde_Crypt_Pgp_Backend
             return '--keyring ' . $this->_publicKeyring;
 
         case 'private':
+            if ($this->_gnupg21) {
+                return '';
+            }
             if (empty($this->_privateKeyring)) {
                 $this->_privateKeyring = $this->_createTempFile('horde-pgp');
             }
