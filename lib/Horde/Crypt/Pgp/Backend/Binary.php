@@ -113,7 +113,11 @@ extends Horde_Crypt_Pgp_Backend
     {
         /* Create temp files to hold the generated keys. */
         $pub_file = $this->_createTempFile('horde-pgp');
-        $secret_file = $this->_createTempFile('horde-pgp');
+        if ($this->_gnupg21) {
+            $secret_file = $pub_file;
+        } else {
+            $secret_file = $this->_createTempFile('horde-pgp');
+        }
 
         $expire = empty($opts['expire'])
             ? 0
