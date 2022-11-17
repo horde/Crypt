@@ -540,9 +540,9 @@ class Horde_Crypt_Smime extends Horde_Crypt
         foreach ($details['subject'] as $key => $value) {
             $text .= sprintf(
                 "\n&nbsp;&nbsp;%s: %s",
-                 htmlspecialchars(
-                     isset($fieldnames[$key]) ? $fieldnames[$key] : $key
-                 ),
+                htmlspecialchars(
+                    isset($fieldnames[$key]) ? $fieldnames[$key] : $key
+                ),
                 htmlspecialchars(implode(', ', (array)$value))
             );
         }
@@ -553,7 +553,7 @@ class Horde_Crypt_Smime extends Horde_Crypt
             '<strong>' . Horde_Crypt_Translation::t("Issuer") . ':</strong>';
 
         foreach ($details['issuer'] as $key => $value) {
-            if (is_array($value)) $value = implode(', ', $value);
+            $value = htmlspecialchars(implode(', ', (array)$value));
             $text .= sprintf(
                 "\n&nbsp;&nbsp;%s: %s",
                 htmlspecialchars(
