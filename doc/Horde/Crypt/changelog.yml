@@ -10,7 +10,7 @@
     uri: http://www.horde.org/licenses/lgpl21
   notes: |
     [jan] Use 16 bit long PGP key IDs. (PR #6, Mike Gabriel <mike.gabriel@das-netzwerkteam.de>).
-    [jan] Improve PHP 8 compatibility in S/MIME backend (PR #4, Hadi Nategh <hnategh@gmail.com>, Hadi Nategh <hnategh@gmail.com>).
+    [jan] Improve PHP 8 compatibility in S/MIME backend (PR #4, Hadi Nategh <hnategh@gmail.com>, Ralf Becker <RalfBecker@outdoor-training.de>).
     [jan] Fix key generation with GnuPG 2 (PR #2, Mike Gabriel <mike.gabriel@das-netzwerkteam.de>).
     [jan] Enforce MDC verification when decrypting PGP messages to mitigate EFAIL attacks (Immerda <admin@immerda.ch>).
 2.7.12:
