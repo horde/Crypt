@@ -464,7 +464,7 @@ extends Horde_Crypt_Pgp_Backend
         foreach ($lines as $line) {
             $fields = explode(':', $line);
             if ($fields[0] == 'pub') {
-                $keyid = '0x' . substr($fields[4], -8);
+                $keyid = '0x' . substr($fields[4], -16);
             } elseif ($keyid && ($fields[0] == 'fpr')) {
                 $fingerprints[$keyid] = $fields[9];
                 $keyid = null;
