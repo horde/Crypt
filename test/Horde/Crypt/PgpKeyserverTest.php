@@ -64,25 +64,4 @@ class Horde_Crypt_PgpKeyserverTest extends Horde_Test_Case
         }
     }
 
-    public function testBrokenKeyserver()
-    {
-        $ks = new Horde_Crypt_Pgp_Keyserver(
-            Horde_Crypt::factory('Pgp', array(
-                'program' => $this->_gnupg
-            )),
-            array('keyserver' => 'http://pgp.key-server.io')
-        );
-        try {
-            $this->assertEquals(
-                '4DE5B969',
-                $ks->getKeyID('jan@horde.org')
-            );
-        } catch (Horde_Crypt_Exception $e) {
-            if ($e->getPrevious() instanceof Horde_Http_Exception) {
-                $this->markTestSkipped($e->getMessage());
-            } else {
-                throw $e;
-            }
-        }
-    }
 }
