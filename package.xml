@@ -3,22 +3,22 @@
  <name>Horde_Crypt</name>
  <channel>pear.horde.org</channel>
  <summary>Cryptography library</summary>
- <description>The Horde_Crypt package class provides an API for various cryptographic systems.</description>
- <lead>
-  <name>Michael Slusarz</name>
-  <user>slusarz</user>
-  <email>slusarz@horde.org</email>
-  <active>yes</active>
- </lead>
+ <description>A library that provides wrappers for various cryptographic systems.</description>
  <lead>
   <name>Jan Schneider</name>
   <user>jan</user>
   <email>jan@horde.org</email>
   <active>yes</active>
  </lead>
- <date>2017-11-11</date>
+ <lead>
+  <name>Michael Slusarz</name>
+  <user>slusarz</user>
+  <email>slusarz@horde.org</email>
+  <active>no</active>
+ </lead>
+ <date>2022-11-17</date>
  <version>
-  <release>2.7.13</release>
+  <release>2.8.0</release>
   <api>2.7.0</api>
  </version>
  <stability>
@@ -319,6 +319,17 @@
     <dir name="Horde">
      <dir name="Crypt">
       <dir name="fixtures">
+       <dir name="mdc">
+        <file name="correct" role="test" />
+        <file name="correct-withoutcrc" role="test" />
+        <file name="manipulated-withoutmdc" role="test" />
+        <file name="manmessage" role="test" />
+        <file name="public-key.gpg" role="test" />
+        <file name="secret-key.gpg" role="test" />
+        <file name="testmessage" role="test" />
+        <file name="withoutmdc" role="test" />
+        <file name="wrongmdc" role="test" />
+       </dir> <!-- /test/Horde/Crypt/fixtures/mdc -->
        <file name="bug_6601.asc" role="test" />
        <file name="clear.txt" role="test" />
        <file name="pgp_encrypted.txt" role="test" />
@@ -533,6 +544,15 @@
    <install as="Horde/Crypt/conf.php.dist" name="test/Horde/Crypt/conf.php.dist" />
    <install as="Horde/Crypt/fixtures/bug_6601.asc" name="test/Horde/Crypt/fixtures/bug_6601.asc" />
    <install as="Horde/Crypt/fixtures/clear.txt" name="test/Horde/Crypt/fixtures/clear.txt" />
+   <install as="Horde/Crypt/fixtures/mdc/correct" name="test/Horde/Crypt/fixtures/mdc/correct" />
+   <install as="Horde/Crypt/fixtures/mdc/correct-withoutcrc" name="test/Horde/Crypt/fixtures/mdc/correct-withoutcrc" />
+   <install as="Horde/Crypt/fixtures/mdc/manipulated-withoutmdc" name="test/Horde/Crypt/fixtures/mdc/manipulated-withoutmdc" />
+   <install as="Horde/Crypt/fixtures/mdc/manmessage" name="test/Horde/Crypt/fixtures/mdc/manmessage" />
+   <install as="Horde/Crypt/fixtures/mdc/public-key.gpg" name="test/Horde/Crypt/fixtures/mdc/public-key.gpg" />
+   <install as="Horde/Crypt/fixtures/mdc/secret-key.gpg" name="test/Horde/Crypt/fixtures/mdc/secret-key.gpg" />
+   <install as="Horde/Crypt/fixtures/mdc/testmessage" name="test/Horde/Crypt/fixtures/mdc/testmessage" />
+   <install as="Horde/Crypt/fixtures/mdc/withoutmdc" name="test/Horde/Crypt/fixtures/mdc/withoutmdc" />
+   <install as="Horde/Crypt/fixtures/mdc/wrongmdc" name="test/Horde/Crypt/fixtures/mdc/wrongmdc" />
    <install as="Horde/Crypt/fixtures/pgp_encrypted.txt" name="test/Horde/Crypt/fixtures/pgp_encrypted.txt" />
    <install as="Horde/Crypt/fixtures/pgp_encrypted_symmetric.txt" name="test/Horde/Crypt/fixtures/pgp_encrypted_symmetric.txt" />
    <install as="Horde/Crypt/fixtures/pgp_private.asc" name="test/Horde/Crypt/fixtures/pgp_private.asc" />
@@ -1381,14 +1401,14 @@
   </release>
   <release>
    <version>
-    <release>2.7.13</release>
+    <release>2.8.0</release>
     <api>2.7.0</api>
    </version>
    <stability>
     <release>stable</release>
     <api>stable</api>
    </stability>
-   <date>2018-05-13</date>
+   <date>2022-11-17</date>
    <license uri="http://www.horde.org/licenses/lgpl21">LGPL-2.1</license>
    <notes>
 * [jan] Enforce MDC verification when decrypting PGP messages to mitigate EFAIL attacks (Immerda &lt;admin@immerda.ch&gt;).
