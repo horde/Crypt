@@ -111,14 +111,6 @@ extends Horde_Crypt_Pgp_Backend
      */
     public function generateKey($opts)
     {
-        /* Create temp files to hold the generated keys. */
-        $pub_file = $this->_createTempFile('horde-pgp');
-        if ($this->_gnupg21) {
-            $secret_file = $pub_file;
-        } else {
-            $secret_file = $this->_createTempFile('horde-pgp');
-        }
-
         $expire = empty($opts['expire'])
             ? 0
             : 'seconds=' . ($opts['expire'] - time());
@@ -126,8 +118,6 @@ extends Horde_Crypt_Pgp_Backend
         /* Create the config file necessary for GnuPG to run in batch mode. */
         /* TODO: Sanitize input, More user customizable? */
         $input = array(
-            '%pubring ' . $pub_file,
-            '%secring ' . $secret_file,
             'Key-Type: ' . $opts['key_type'],
             'Key-Length: ' . $opts['keylength'],
             'Subkey-Type: ' . $opts['subkey_type'],
@@ -138,6 +128,13 @@ extends Horde_Crypt_Pgp_Backend
             'Passphrase: ' . $opts['passphrase'],
             'Preferences: AES256 AES192 AES CAST5 3DES SHA256 SHA512 SHA384 SHA224 SHA1 ZLIB BZIP2 ZIP Uncompressed'
         );
+        if (!$this->_gnupg21) {
+            /* Create temp files to hold the generated keys. */
+            $pub_file = $this->_createTempFile('horde-pgp');
+            $secret_file = $this->_createTempFile('horde-pgp');
+            $input[] = '%pubring ' . $pub_file;
+            $input[] = '%secring ' . $secret_file;
+        }
         if (!empty($opts['comment'])) {
             $input[] = 'Name-Comment: ' . $opts['comment'];
         }
@@ -156,9 +153,14 @@ extends Horde_Crypt_Pgp_Backend
             true
         );
 
-        /* Get the keys from the temp files. */
-        $public_key = file_get_contents($pub_file);
-        $secret_key = file_get_contents($secret_file);
+        if ($this->_gnupg21) {
+            $public_key = $this->_callGpg(array('--export', '--batch', '--armor'), 'r', array(), true, true)->output;
+            $secret_key = $this->_callGpg(array('--export-secret-key', '--batch', '--passphrase-fd 0', '--armor'), 'w', $opts['passphrase'], true, true, true, true)->output;
+        } else {
+            /* Get the keys from the temp files. */
+            $public_key = file_get_contents($public_file);
+            $secret_key = file_get_contents($secret_file);
+        }
 
         /* If either key is empty, something went wrong. */
         if (empty($public_key) || empty($secret_key)) {
