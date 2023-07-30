@@ -244,8 +244,8 @@ class Horde_Crypt_Pgp extends Horde_Crypt
 
             $msg .= $leftrow[0] . (isset($key['name']) ? stripcslashes($key['name']) : '') . "\n"
                 . $leftrow[1] . (($key['key_type'] == 'public_key') ? Horde_Crypt_Translation::t("Public Key") : Horde_Crypt_Translation::t("Private Key")) . "\n"
-                . $leftrow[2] . strftime("%D", $val[$sig_key]['created']) . "\n"
-                . $leftrow[3] . (empty($val[$sig_key]['expires']) ? '[' . Horde_Crypt_Translation::t("Never") . ']' : strftime("%D", $val[$sig_key]['expires'])) . "\n"
+                . $leftrow[2] . date("m/d/y", $val[$sig_key]['created']) . "\n"
+                . $leftrow[3] . (empty($val[$sig_key]['expires']) ? '[' . Horde_Crypt_Translation::t("Never") . ']' : date("m/d/y", $val[$sig_key]['expires'])) . "\n"
                 . $leftrow[4] . $key['key_size'] . " Bytes\n"
                 . $leftrow[5] . (empty($key['comment']) ? '[' . Horde_Crypt_Translation::t("None") . ']' : $key['comment']) . "\n"
                 . $leftrow[6] . (empty($key['email']) ? '[' . Horde_Crypt_Translation::t("None") . ']' : $key['email']) . "\n"
