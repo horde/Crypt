@@ -12,7 +12,7 @@
 
 class Horde_Crypt_SmimeTest extends Horde_Test_Case
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!extension_loaded('openssl')) {
             $this->markTestSkipped('No openssl support in PHP.');

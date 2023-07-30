@@ -18,13 +18,13 @@ extends Horde_Test_Case
     /* Returns the list of backends to test. */
     abstract protected function _setUp();
 
-    protected function setUp()
+    protected function setUp(): void
     {
         @date_default_timezone_set('GMT');
         $this->_language = getenv('LANGUAGE');
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         putenv('LANGUAGE=' . $this->_language);
     }

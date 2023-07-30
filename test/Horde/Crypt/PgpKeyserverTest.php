@@ -14,7 +14,7 @@ class Horde_Crypt_PgpKeyserverTest extends Horde_Test_Case
     protected $_ks;
     protected $_gnupg;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $c = self::getConfig('CRYPT_TEST_CONFIG', __DIR__);
         $this->_gnupg = isset($c['gnupg'])
@@ -37,6 +37,8 @@ class Horde_Crypt_PgpKeyserverTest extends Horde_Test_Case
 
     public function testKeyserverRetrieve()
     {
+        $this->expectNotToPerformAssertions();
+
         try {
             $this->_ks->get('4DE5B969');
         } catch (Horde_Crypt_Exception $e) {

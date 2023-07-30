@@ -12,7 +12,7 @@ class Horde_Crypt_PgpParseTest extends Horde_Test_Case
 {
     protected $_pgp;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->_pgp = new Horde_Crypt_Pgp();
     }
