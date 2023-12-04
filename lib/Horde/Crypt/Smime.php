@@ -50,7 +50,7 @@ class Horde_Crypt_Smime extends Horde_Crypt
             ? openssl_pkey_get_private($private_key)
             : openssl_pkey_get_private($private_key, $passphrase);
 
-        return ($res !== false);
+        return is_resource($res);
     }
 
     /**
@@ -540,10 +540,10 @@ class Horde_Crypt_Smime extends Horde_Crypt
         foreach ($details['subject'] as $key => $value) {
             $text .= sprintf(
                 "\n&nbsp;&nbsp;%s: %s",
-                htmlspecialchars(
-                    isset($fieldnames[$key]) ? $fieldnames[$key] : $key
-                ),
-                htmlspecialchars(implode(', ', (array)$value))
+                 htmlspecialchars(
+                     isset($fieldnames[$key]) ? $fieldnames[$key] : $key
+                 ),
+                htmlspecialchars($value)
             );
         }
         $text .= "\n";
@@ -553,7 +553,6 @@ class Horde_Crypt_Smime extends Horde_Crypt
             '<strong>' . Horde_Crypt_Translation::t("Issuer") . ':</strong>';
 
         foreach ($details['issuer'] as $key => $value) {
-            $value = htmlspecialchars(implode(', ', (array)$value));
             $text .= sprintf(
                 "\n&nbsp;&nbsp;%s: %s",
                 htmlspecialchars(

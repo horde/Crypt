@@ -1,3 +1,12 @@
+------------
+v3.0.0alpha1
+------------
+
+[jan] Enforce MDC verification when decrypting PGP messages to mitigate EFAIL
+      attacks (Immerda <admin@immerda.ch>).
+|+
+
+
 ------
 v2.8.0
 ------

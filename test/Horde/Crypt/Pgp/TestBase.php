@@ -57,7 +57,7 @@ Key Length:       1024 Bytes
 Comment:          [None]
 E-Mail:           rselsky@bu.edu
 Hash-Algorithm:   pgp-sha1
-Key ID:           0x04A67B37F3C01D42
+Key ID:           0xF3C01D42
 Key Fingerprint:  5912D91D4C79C6701FFF148604A67B37F3C01D42
 
 ',
@@ -363,7 +363,7 @@ Key Length:       1024 Bytes
 Comment:          My Comment
 E-Mail:           me@example.com
 Hash-Algorithm:   pgp-sha1
-Key ID:           0x7CA74426BADEABD7
+Key ID:           0xBADEABD7
 Key Fingerprint:  966F4BA9569DE6F65E8253977CA74426BADEABD7
 
 ',
@@ -379,7 +379,7 @@ Key Length:       1024 Bytes
 Comment:          My Comment
 E-Mail:           me@example.com
 Hash-Algorithm:   pgp-sha1
-Key ID:           0x7CA74426BADEABD7
+Key ID:           0xBADEABD7
 Key Fingerprint:  966F4BA9569DE6F65E8253977CA74426BADEABD7
 
 ',
@@ -403,13 +403,13 @@ Key Fingerprint:  966F4BA9569DE6F65E8253977CA74426BADEABD7
         $fingerprints = array(
             array(
                 array(
-                    '0x7CA74426BADEABD7' => '966F4BA9569DE6F65E8253977CA74426BADEABD7'
+                    '0xBADEABD7' => '966F4BA9569DE6F65E8253977CA74426BADEABD7'
                 ),
                 $this->_getPublicKey()
             ),
             array(
                 array(
-                    '0x7CA74426BADEABD7' => '966F4BA9569DE6F65E8253977CA74426BADEABD7'
+                    '0xBADEABD7' => '966F4BA9569DE6F65E8253977CA74426BADEABD7'
                 ),
                 $this->_getPrivateKey()
             )

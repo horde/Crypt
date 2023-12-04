@@ -1,4 +1,16 @@
 ---
+3.0.0alpha1:
+  api: 3.0.0alpha1
+  state:
+    release: stable
+    api: stable
+  date: 2018-05-13
+  license:
+    identifier: LGPL-2.1
+    uri: http://www.horde.org/licenses/lgpl21
+  notes: |
+    [jan] Enforce MDC verification when decrypting PGP messages to mitigate EFAIL attacks (Immerda <admin@immerda.ch>).
+    |+
 2.8.0:
   api: 2.7.0
   state:

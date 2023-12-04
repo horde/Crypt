@@ -268,8 +268,8 @@ class Horde_Crypt_Pgp extends Horde_Crypt
         if (strpos($keyid, '0x') === 0) {
             $keyid = substr($keyid, 2);
         }
-        if (strlen($keyid) > 16) {
-            $keyid = substr($keyid, -16);
+        if (strlen($keyid) > 8) {
+            $keyid = substr($keyid, -8);
         }
         return '0x' . $keyid;
     }
