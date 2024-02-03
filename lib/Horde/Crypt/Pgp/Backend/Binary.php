@@ -284,7 +284,7 @@ extends Horde_Crypt_Pgp_Backend
                 if (strpos($lowerLine, ':user id packet:') !== false) {
                     $uid_idx++;
                     $line = preg_replace_callback('/\\\\x([0-9a-f]{2})/', $packetInfoHelper, $line);
-                    if (!preg_match('/"([^\<]+)\<([^\>]+)\>"/', $line, $matches)) {
+                    if (!preg_match('/"([^\<]+)\<([^\>]+)\>"/', $line, $matches) && !preg_match('/"([^\<]+@[^\>]+)"/', $line, $matches)) {
                         continue;
                     }
                     $header = 'id' . $uid_idx;
@@ -308,7 +308,11 @@ extends Horde_Crypt_Pgp_Backend
                             $keyid = substr(str_replace(' ', '', $m[1]), -16);
                         }
                     }
-                    $out[$key_idx]['signature'][$header]['email'] = $matches[2];
+                    if (array_key_exists(2,$matches)) {
+                      $out[$key_idx]['signature'][$header]['email'] = $matches[2];
+                    } else {
+                      $out[$key_idx]['signature'][$header]['email'] = $matches[1];
+                    }
                     $out[$key_idx]['signature'][$header]['keyid'] = $keyid;
                     continue;
                 }
