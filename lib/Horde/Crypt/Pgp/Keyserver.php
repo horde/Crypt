@@ -175,7 +175,12 @@ class Horde_Crypt_Pgp_Keyserver
                 if (strpos($response->getHeader('Content-Type'), 'text/plain') !== 0) {
                     continue;
                 }
-                $output = $response->getBody();
+                $body = $response->getBody();
+                if (urlencode(urldecode($body)) === $body) {
+                    $output = urldecode($body);
+                } else {
+                    $output = $body;
+                }
             } catch (Horde_Http_Exception $e) {
                 throw new Horde_Crypt_Exception($e);
             }
