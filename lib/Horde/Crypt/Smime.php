@@ -573,18 +573,12 @@ class Horde_Crypt_Smime extends Horde_Crypt
             . sprintf(
                 "\n&nbsp;&nbsp;%s: %s",
                 Horde_Crypt_Translation::t("Not Before"),
-                strftime(
-                    '%x %X',
-                    $details['validity']['notbefore']->getTimestamp()
-                )
+                $details['validity']['notbefore']->format('m/d/Y H:i:s')
             )
             . sprintf(
                 "\n&nbsp;&nbsp;%s: %s",
                 Horde_Crypt_Translation::t("Not After"),
-                strftime(
-                    '%x %X',
-                    $details['validity']['notafter']->getTimestamp()
-                )
+                $details['validity']['notafter']->format('m/d/Y H:i:s')
             );
 
         /* X509v3 extensions */
