@@ -20,19 +20,19 @@
     "repositories": [],
     "require": {
         "php": "^8",
-        "horde/exception": "^3",
-        "horde/http": "^3",
-        "horde/mime": "^3",
-        "horde/stream": "^2",
-        "horde/stream_filter": "^3",
-        "horde/translation": "^3",
-        "horde/url": "^3",
-        "horde/util": "^3",
+        "horde/exception": "^3 || dev-FRAMEWORK_6_0",
+        "horde/http": "^3 || dev-FRAMEWORK_6_0",
+        "horde/mime": "^3 || dev-FRAMEWORK_6_0",
+        "horde/stream": "^2 || dev-FRAMEWORK_6_0",
+        "horde/stream_filter": "^3 || dev-FRAMEWORK_6_0",
+        "horde/translation": "^3 || dev-FRAMEWORK_6_0",
+        "horde/url": "^3 || dev-FRAMEWORK_6_0",
+        "horde/util": "^3 || dev-FRAMEWORK_6_0",
         "ext-hash": "*",
         "ext-openssl": "*"
     },
-    "suggest": {
-    },
+    "require-dev": {},
+    "suggest": {},
     "autoload": {
         "psr-0": {
             "Horde_Crypt": "lib/"
@@ -43,8 +43,6 @@
             "Horde\\Crypt\\Test\\": "test/"
         }
     },
-    "minimum-stability": "alpha",
-    "prefer-stable": true,
     "config": {
         "allow-plugins": {}
     },
