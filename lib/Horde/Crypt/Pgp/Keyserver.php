@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright 2002-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2002-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (LGPL). If you
  * did not receive this file, see http://www.horde.org/licenses/lgpl21.
@@ -58,7 +59,7 @@ class Horde_Crypt_Pgp_Keyserver
      *   - port: (integer) The public PGP keyserver port.
      * </pre>
      */
-    public function __construct($pgp, array $params = array())
+    public function __construct($pgp, array $params = [])
     {
         $this->_pgp = $pgp;
         if (isset($params['http'])) {
@@ -73,10 +74,9 @@ class Horde_Crypt_Pgp_Keyserver
          * instead of plain text on arbitrary criteria. A User-Agent header is
          * one of those. */
         $this->_http->{'request.userAgent'} = '';
-        $this->_keyserver = isset($params['keyserver'])
-            ? $params['keyserver']
-            : 'http://pool.sks-keyservers.net';
-        $this->_keyserver .= ':' . (isset($params['port']) ? $params['port'] : '11371');
+        $this->_keyserver = $params['keyserver']
+            ?? 'http://pool.sks-keyservers.net';
+        $this->_keyserver .= ':' . ($params['port'] ?? '11371');
     }
 
     /**
@@ -90,10 +90,10 @@ class Horde_Crypt_Pgp_Keyserver
     public function get($keyid)
     {
         /* Connect to the public keyserver. */
-        $url = $this->_createUrl('/pks/lookup', array(
+        $url = $this->_createUrl('/pks/lookup', [
             'op' => 'get',
-            'search' => $this->_pgp->getKeyIDString($keyid)
-        ));
+            'search' => $this->_pgp->getKeyIDString($keyid),
+        ]);
 
         try {
             $output = $this->_http->get($url)->getBody();
@@ -131,12 +131,12 @@ class Horde_Crypt_Pgp_Keyserver
                 $this->_http->post(
                     $this->_createUrl('/pks/add'),
                     $pubkey,
-                    array(
+                    [
                         'User-Agent: Horde Application Framework',
                         'Content-Type: application/x-www-form-urlencoded',
                         'Content-Length: ' . strlen($pubkey),
-                        'Connection: close'
-                    )
+                        'Connection: close',
+                    ]
                 );
             } catch (Horde_Http_Exception $e) {
                 throw new Horde_Crypt_Exception($e);
@@ -160,11 +160,11 @@ class Horde_Crypt_Pgp_Keyserver
         $pubkey = null;
 
         /* Connect to the public keyserver. */
-        $url = $this->_createUrl('/pks/lookup', array(
+        $url = $this->_createUrl('/pks/lookup', [
             'op' => 'index',
             'options' => 'mr',
-            'search' => $address
-        ));
+            'search' => $address,
+        ]);
 
         // Some keyservers are broken, third time's a charm.
         $output = null;
@@ -191,15 +191,15 @@ class Horde_Crypt_Pgp_Keyserver
             $pubkey = $output;
         } elseif (strpos($output, 'pub:') !== false) {
             $output = explode("\n", $output);
-            $keyids = $keyuids = array();
+            $keyids = $keyuids = [];
             $curid = null;
 
             foreach ($output as $line) {
                 if (substr($line, 0, 4) == 'pub:') {
                     $line = explode(':', $line);
                     /* Ignore invalid lines and expired keys. */
-                    if (count($line) != 7 ||
-                        (!empty($line[5]) && $line[5] <= time())) {
+                    if (count($line) != 7
+                        || (!empty($line[5]) && $line[5] <= time())) {
                         continue;
                     }
                     $curid = $line[4];
@@ -233,9 +233,9 @@ class Horde_Crypt_Pgp_Keyserver
 
         if ($pubkey) {
             $sig = $this->_pgp->pgpPacketSignature($pubkey, $address);
-            if (!empty($sig['keyid']) &&
-                (empty($sig['public_key']['expires']) ||
-                 $sig['public_key']['expires'] > time())) {
+            if (!empty($sig['keyid'])
+                && (empty($sig['public_key']['expires'])
+                 || $sig['public_key']['expires'] > time())) {
                 return substr($this->_pgp->getKeyIDString($sig['keyid']), 2);
             }
         }
@@ -251,7 +251,7 @@ class Horde_Crypt_Pgp_Keyserver
      *
      * @return Horde_Url  Keyserver URL.
      */
-    protected function _createUrl($uri, array $params = array())
+    protected function _createUrl($uri, array $params = [])
     {
         $url = new Horde_Url($this->_keyserver . $uri, true);
         return $url->add($params);

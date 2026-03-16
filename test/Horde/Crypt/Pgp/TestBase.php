@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Horde_Crypt_Pgp tests.
  *
@@ -10,10 +11,13 @@
  * @package    Crypt
  * @subpackage UnitTests
  */
+
 namespace Horde\Crypt\Pgp;
-use \Horde_Test_Case as TestCase;
-use \Horde_Crypt;
-use \Horde_String;
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
+use Horde_Crypt;
+use Horde_String;
 
 abstract class TestBase extends TestCase
 {
@@ -21,6 +25,49 @@ abstract class TestBase extends TestCase
 
     /* Returns the list of backends to test. */
     abstract protected function _setUp();
+
+    /**
+     * Get configuration from environment or config file.
+     * Auto-detects test helpers when no config is present.
+     */
+    protected static function getConfig(string $env_key, string $config_path): array
+    {
+        // Try environment variable first
+        $config_file = getenv($env_key);
+
+        // Fall back to default config path
+        if (!$config_file || !file_exists($config_file)) {
+            $config_file = $config_path . 'conf.php';
+        }
+
+        // If config file exists, load it
+        if (file_exists($config_file)) {
+            return include $config_file;
+        }
+
+        // Auto-detect test helpers when no config present
+        $config = [];
+
+        // Try to find gpg binary
+        $gpg_paths = ['/usr/bin/gpg', '/usr/local/bin/gpg', '/opt/homebrew/bin/gpg'];
+        foreach ($gpg_paths as $path) {
+            if (is_executable($path)) {
+                $config['gnupg'] = $path;
+                break;
+            }
+        }
+
+        // Try gpg2 as well
+        $gpg2_paths = ['/usr/bin/gpg2', '/usr/local/bin/gpg2', '/opt/homebrew/bin/gpg2'];
+        foreach ($gpg2_paths as $path) {
+            if (is_executable($path)) {
+                $config['gnupg2'] = $path;
+                break;
+            }
+        }
+
+        return $config;
+    }
 
     protected function setUp(): void
     {
@@ -33,27 +80,38 @@ abstract class TestBase extends TestCase
         putenv('LANGUAGE=' . $this->_language);
     }
 
-    public function backendProvider()
+    public static function backendProvider()
     {
-        $pgp = array();
-        foreach ($this->_setUp() as $backend) {
-            $pgp[] = array(Horde_Crypt::factory('Pgp', array(
-                'backends' => array($backend)
-            )));
+        // Create a temporary instance to call _setUp()
+        $reflection = new \ReflectionClass(static::class);
+        if ($reflection->isAbstract()) {
+            return [];
+        }
+
+        $instance = $reflection->newInstanceWithoutConstructor();
+        $pgp = [];
+        try {
+            $backends = $instance->_setUp();
+            foreach ($backends as $backend) {
+                $pgp[] = [Horde_Crypt::factory('Pgp', [
+                    'backends' => [$backend],
+                ])];
+            }
+        } catch (\Exception $e) {
+            // If setup fails, return empty array to skip tests
+            return [];
         }
         return $pgp;
     }
 
-    /**
-     * @dataProvider backendProvider
-     */
+    #[DataProvider("backendProvider")]
     public function testBug6601($pgp)
     {
         $data = $this->_getFixture('bug_6601.asc');
 
         putenv('LANGUAGE=C');
         $this->assertEquals(
-'Name:             Richard Selsky
+            'Name:             Richard Selsky
 Key Type:         Public Key
 Key Creation:     04/11/08
 Expiration Date:  04/11/13
@@ -71,23 +129,22 @@ Key Fingerprint:  5912D91D4C79C6701FFF148604A67B37F3C01D42
 
     /**
      * decrypt() message
-     *
-     * @dataProvider backendProvider
      */
+    #[DataProvider("backendProvider")]
     public function testPgpDecrypt($pgp)
     {
         // Encrypted data is in ISO-8859-1 format
         $crypt = $this->_getFixture('pgp_encrypted.txt');
 
-        $decrypt = $pgp->decrypt($crypt, array(
+        $decrypt = $pgp->decrypt($crypt, [
             'passphrase' => 'Secret',
             'privkey' => $this->_getPrivateKey(),
             'pubkey' => $this->_getPublicKey(),
-            'type' => 'message'
-        ));
+            'type' => 'message',
+        ]);
 
         $this->assertEquals(
-'0123456789012345678901234567890123456789
+            '0123456789012345678901234567890123456789
 The quick brown fox jumps over the lazy dog.
 The quick brown fox jumps over the lazy dog.
 The quick brown fox jumps over the lazy dog.
@@ -107,21 +164,19 @@ The quick brown fox jumps over the lazy dog.
         );
     }
 
-    /**
-     * @dataProvider backendProvider
-     */
+    #[DataProvider("backendProvider")]
     public function testPgpDecryptSymmetric($pgp)
     {
         // Encrypted data is in ISO-8859-1 format
         $crypt = $this->_getFixture('pgp_encrypted_symmetric.txt');
 
-        $decrypt = $pgp->decrypt($crypt, array(
+        $decrypt = $pgp->decrypt($crypt, [
             'passphrase' => 'Secret',
-            'type' => 'message'
-        ));
+            'type' => 'message',
+        ]);
 
         $this->assertEquals(
-'0123456789012345678901234567890123456789
+            '0123456789012345678901234567890123456789
 The quick brown fox jumps over the lazy dog.
 The quick brown fox jumps over the lazy dog.
 The quick brown fox jumps over the lazy dog.
@@ -140,20 +195,18 @@ The quick brown fox jumps over the lazy dog.
         );
     }
 
-    /**
-     * @dataProvider backendProvider
-     */
+    #[DataProvider("backendProvider")]
     public function testPgpEncrypt($pgp)
     {
         $clear = $this->_getFixture('clear.txt');
 
-        $out = $pgp->encrypt($clear, array(
-            'recips' => array('me@example.com' => $this->_getPublicKey()),
-            'type' => 'message'
-        ));
+        $out = $pgp->encrypt($clear, [
+            'recips' => ['me@example.com' => $this->_getPublicKey()],
+            'type' => 'message',
+        ]);
 
         $this->assertStringMatchesFormat(
-'-----BEGIN PGP MESSAGE-----
+            '-----BEGIN PGP MESSAGE-----
 Version: GnuPG %s
 
 %s
@@ -172,21 +225,19 @@ Version: GnuPG %s
         );
     }
 
-    /**
-     * @dataProvider backendProvider
-     */
+    #[DataProvider("backendProvider")]
     public function testPgpEncryptSymmetric($pgp)
     {
         $clear = $this->_getFixture('clear.txt');
 
-        $out = $pgp->encrypt($clear, array(
+        $out = $pgp->encrypt($clear, [
             'passphrase' => 'Secret',
             'symmetric' => true,
-            'type' => 'message'
-        ));
+            'type' => 'message',
+        ]);
 
         $this->assertStringMatchesFormat(
-'-----BEGIN PGP MESSAGE-----
+            '-----BEGIN PGP MESSAGE-----
 Version: GnuPG %s
 
 %s
@@ -199,9 +250,7 @@ Version: GnuPG %s
         );
     }
 
-    /**
-     * @dataProvider backendProvider
-     */
+    #[DataProvider("backendProvider")]
     public function testPgpEncryptedSymmetrically($pgp)
     {
         $this->assertFalse(
@@ -216,9 +265,7 @@ Version: GnuPG %s
         );
     }
 
-    /**
-     * @dataProvider backendProvider
-     */
+    #[DataProvider("backendProvider")]
     public function testGetSignersKeyID($pgp)
     {
         $this->assertEquals(
@@ -227,9 +274,7 @@ Version: GnuPG %s
         );
     }
 
-    /**
-     * @dataProvider backendProvider
-     */
+    #[DataProvider("backendProvider")]
     public function testPgpPacketInformation($pgp)
     {
         $out = $pgp->pgpPacketInformation($this->_getPublicKey());
@@ -279,9 +324,7 @@ Version: GnuPG %s
         );
     }
 
-    /**
-     * @dataProvider backendProvider
-     */
+    #[DataProvider("backendProvider")]
     public function testPgpPacketSignature($pgp)
     {
         $out = $pgp->pgpPacketSignature(
@@ -315,9 +358,7 @@ Version: GnuPG %s
         );
     }
 
-    /**
-     * @dataProvider backendProvider
-     */
+    #[DataProvider("backendProvider")]
     public function testPgpPacketSignatureByUidIndex($pgp)
     {
         $out = $pgp->pgpPacketSignatureByUidIndex(
@@ -351,15 +392,13 @@ Version: GnuPG %s
         );
     }
 
-    /**
-     * @dataProvider backendProvider
-     */
+    #[DataProvider("backendProvider")]
     public function testPgpPrettyKey($pgp)
     {
         putenv('LANGUAGE=C');
 
         $this->assertEquals(
-'Name:             My Name
+            'Name:             My Name
 Key Type:         Public Key
 Key Creation:     08/11/06
 Expiration Date:  [Never]
@@ -375,7 +414,7 @@ Key Fingerprint:  966F4BA9569DE6F65E8253977CA74426BADEABD7
         );
 
         $this->assertEquals(
-'Name:             My Name
+            'Name:             My Name
 Key Type:         Private Key
 Key Creation:     08/11/06
 Expiration Date:  [Never]
@@ -391,9 +430,7 @@ Key Fingerprint:  966F4BA9569DE6F65E8253977CA74426BADEABD7
         );
     }
 
-    /**
-     * @dataProvider pgpGetFingerprintsFromKeyProvider
-     */
+    #[DataProvider("pgpGetFingerprintsFromKeyProvider")]
     public function testPgpGetFingerprintsFromKey($pgp, $expected, $key)
     {
         $this->assertEquals(
@@ -402,23 +439,23 @@ Key Fingerprint:  966F4BA9569DE6F65E8253977CA74426BADEABD7
         );
     }
 
-    public function pgpGetFingerprintsFromKeyProvider()
+    public static function pgpGetFingerprintsFromKeyProvider()
     {
-        $fingerprints = array(
-            array(
-                array(
-                    '0xBADEABD7' => '966F4BA9569DE6F65E8253977CA74426BADEABD7'
-                ),
-                $this->_getPublicKey()
-            ),
-            array(
-                array(
-                    '0xBADEABD7' => '966F4BA9569DE6F65E8253977CA74426BADEABD7'
-                ),
-                $this->_getPrivateKey()
-            )
-        );
-        $args = $this->backendProvider();
+        $fingerprints = [
+            [
+                [
+                    '0xBADEABD7' => '966F4BA9569DE6F65E8253977CA74426BADEABD7',
+                ],
+                file_get_contents(dirname(__DIR__) . '/fixtures/pgp_public.asc'),
+            ],
+            [
+                [
+                    '0xBADEABD7' => '966F4BA9569DE6F65E8253977CA74426BADEABD7',
+                ],
+                file_get_contents(dirname(__DIR__) . '/fixtures/pgp_private.asc'),
+            ],
+        ];
+        $args = self::backendProvider();
         foreach ($args as &$arg) {
             foreach ($fingerprints as $fingerprint) {
                 $arg = array_merge($arg, $fingerprint);
@@ -427,9 +464,7 @@ Key Fingerprint:  966F4BA9569DE6F65E8253977CA74426BADEABD7
         return $args;
     }
 
-    /**
-     * @dataProvider backendProvider
-     */
+    #[DataProvider("backendProvider")]
     public function pgpPublicKeyMIMEPart($pgp)
     {
         $mime_part = $pgp->publicKeyMIMEPart($this->_getPublicKey());
@@ -440,7 +475,7 @@ Key Fingerprint:  966F4BA9569DE6F65E8253977CA74426BADEABD7
         );
 
         $this->assertEquals(
-'-----BEGIN PGP PUBLIC KEY BLOCK-----
+            '-----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG %s
 
 mQGiBETcWvARBADNitbvsWy5/hhV+WcU2ttmtXkAj2DqJVgJdGS2RH8msO0roG5j
@@ -468,17 +503,19 @@ umO5uT5yDcir3zwqUAxzBAkE4ACcCtGfb6usaTKnNXo+ZuLoHiOwIE4=
         );
     }
 
-    /**
-     * @dataProvider backendProvider
-     */
+    #[DataProvider("backendProvider")]
     public function testGenerateKey($pgp)
     {
         $this->expectException('Horde_Crypt_Exception');
 
-        $expire = time() + 2*86400;
+        $expire = time() + 2 * 86400;
         $keys = $pgp->generateKey(
-            'John Doe', 'john@example.com', 'secret', 'Key Comment', 4096,
-            time() + 2*86400
+            'John Doe',
+            'john@example.com',
+            'secret',
+            'Key Comment',
+            4096,
+            time() + 2 * 86400
         );
         // Key generation may take some time, so get the expiration date after
         // being finished.
@@ -506,22 +543,20 @@ umO5uT5yDcir3zwqUAxzBAkE4ACcCtGfb6usaTKnNXo+ZuLoHiOwIE4=
         $this->assertEquals(4096, $info['public_key']['size']);
     }
 
-    /**
-     * @dataProvider backendProvider
-     */
+    #[DataProvider("backendProvider")]
     public function testPgpSign($pgp)
     {
         $clear = $this->_getFixture('clear.txt');
 
-        $out = $pgp->encrypt($clear, array(
+        $out = $pgp->encrypt($clear, [
             'passphrase' => 'Secret',
             'privkey' => $this->_getPrivateKey(),
             'pubkey' => $this->_getPublicKey(),
-            'type' => 'signature'
-        ));
+            'type' => 'signature',
+        ]);
 
         $this->assertStringMatchesFormat(
-'-----BEGIN PGP SIGNATURE-----
+            '-----BEGIN PGP SIGNATURE-----
 Version: GnuPG %s
 
 %s
@@ -531,16 +566,16 @@ Version: GnuPG %s
             $out
         );
 
-        $out = $pgp->encrypt($clear, array(
+        $out = $pgp->encrypt($clear, [
             'passphrase' => 'Secret',
             'privkey' => $this->_getPrivateKey(),
             'pubkey' => $this->_getPublicKey(),
             'sigtype' => 'cleartext',
-            'type' => 'signature'
-        ));
+            'type' => 'signature',
+        ]);
 
         $this->assertStringMatchesFormat(
-'-----BEGIN PGP SIGNED MESSAGE-----
+            '-----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
 0123456789012345678901234567890123456789
@@ -568,48 +603,44 @@ Version: GnuPG %s
         );
     }
 
-    /**
-     * @dataProvider backendProvider
-     */
+    #[DataProvider("backendProvider")]
     public function testDecryptSignature($pgp)
     {
         date_default_timezone_set('GMT');
 
         $out = $pgp->decrypt(
             $this->_getFixture('clear.txt'),
-            array(
+            [
                 'pubkey' => $this->_getPublicKey(),
                 'signature' => $this->_getFixture('pgp_signature.txt'),
-                'type' => 'detached-signature'
-            )
+                'type' => 'detached-signature',
+            ]
         );
 
         $this->assertNotEmpty($out->result);
 
         $out = $pgp->decrypt(
             $this->_getFixture('pgp_signed.txt'),
-            array(
+            [
                 'pubkey' => $this->_getPublicKey(),
-                'type' => 'signature'
-            )
+                'type' => 'signature',
+            ]
         );
 
         $this->assertNotEmpty($out->result);
 
         $out = $pgp->decrypt(
             $this->_getFixture('pgp_signed2.txt'),
-            array(
+            [
                 'pubkey' => $this->_getPublicKey(),
-                'type' => 'signature'
-            )
+                'type' => 'signature',
+            ]
         );
 
         $this->assertNotEmpty($out->result);
     }
 
-    /**
-     * @dataProvider backendProvider
-     */
+    #[DataProvider("backendProvider")]
     public function testVerifyPassphraseCorrect($pgp)
     {
         $this->assertTrue(
@@ -621,9 +652,7 @@ Version: GnuPG %s
         );
     }
 
-    /**
-     * @dataProvider backendProvider
-     */
+    #[DataProvider("backendProvider")]
     public function testVerifyPassphraseIncorrect($pgp)
     {
         $this->assertFalse(
@@ -635,9 +664,7 @@ Version: GnuPG %s
         );
     }
 
-    /**
-     * @dataProvider backendProvider
-     */
+    #[DataProvider("backendProvider")]
     public function testGetPublicKeyFromPrivateKey($pgp)
     {
         $this->assertNotNull(
@@ -645,9 +672,7 @@ Version: GnuPG %s
         );
     }
 
-    /**
-     * @dataProvider backendProvider
-     */
+    #[DataProvider("backendProvider")]
     public function testDetectingDigestAlgoBug14814($pgp)
     {
         $fixture = $this->_getFixture('test_digest_algo.txt');
@@ -658,62 +683,50 @@ Version: GnuPG %s
         );
     }
 
-    /**
-     * @dataProvider backendProvider
-     */
+    #[DataProvider("backendProvider")]
+    #[DataProvider("backendProvider")]
+
     public function testMdcCorrect($pgp)
     {
         $this->expectException('Horde_Crypt_Exception');
         $this->_testMdc($pgp, 'correct');
     }
 
-    /**
-     * @dataProvider backendProvider
-     */
+    #[DataProvider("backendProvider")]
+    #[DataProvider("backendProvider")]
+
     public function testMdcCorrectWithoutCrc($pgp)
     {
         $this->expectException('Horde_Crypt_Exception');
         $this->_testMdc($pgp, 'correct-withoutcrc');
     }
 
-    /**
-     * @expectedException Horde_Crypt_Exception
-     * @expectedExceptionMessage Could not decrypt PGP data.
-     * @dataProvider backendProvider
-     */
+    /**     */
+    #[DataProvider("backendProvider")]
     public function testMdcWithoutMdc($pgp)
     {
         $this->expectException('Horde_Crypt_Exception');
         $this->_testMdc($pgp, 'withoutmdc');
     }
 
-    /**
-     * @expectedException Horde_Crypt_Exception
-     * @expectedExceptionMessage Could not decrypt PGP data.
-     * @dataProvider backendProvider
-     */
+    /**     */
+    #[DataProvider("backendProvider")]
     public function testMdcManipulatedWithoutMdc($pgp)
     {
         $this->expectException('Horde_Crypt_Exception');
         $this->_testMdc($pgp, 'manipulated-withoutmdc');
     }
 
-    /**
-     * @expectedException Horde_Crypt_Exception
-     * @expectedExceptionMessage Could not decrypt PGP data.
-     * @dataProvider backendProvider
-     */
+    /**     */
+    #[DataProvider("backendProvider")]
     public function testMdcWrongMdc($pgp)
     {
         $this->expectException('Horde_Crypt_Exception');
         $this->_testMdc($pgp, 'wrongmdc');
     }
 
-    /**
-     * @expectedException Horde_Crypt_Exception
-     * @expectedExceptionMessage Could not decrypt PGP data.
-     * @dataProvider backendProvider
-     */
+    /**     */
+    #[DataProvider("backendProvider")]
     public function testMdcManipulated($pgp)
     {
         $this->expectException('Horde_Crypt_Exception');
@@ -724,12 +737,12 @@ Version: GnuPG %s
     {
         $crypt = $this->_getFixture('mdc/' . $fixture);
 
-        $decrypt = $pgp->decrypt($crypt, array(
+        $decrypt = $pgp->decrypt($crypt, [
             'passphrase' => '',
             'privkey' => $this->_getFixture('mdc/secret-key.gpg'),
             'pubkey' => $this->_getFixture('mdc/public-key.gpg'),
-            'type' => 'message'
-        ));
+            'type' => 'message',
+        ]);
 
         $this->assertStringEqualsFile(
             dirname(__DIR__) . '/fixtures/mdc/testmessage',

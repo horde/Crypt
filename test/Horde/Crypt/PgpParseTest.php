@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for PGP armor parsing.
  *
@@ -8,11 +9,16 @@
  * @package    Crypt
  * @subpackage UnitTests
  */
+
 namespace Horde\Crypt;
-use Horde_Test_Case as TestCase;
+
+use PHPUnit\Framework\TestCase;
 use Horde_Crypt_Pgp;
 use Horde_Stream_Temp;
 
+/**
+ * @coversNothing
+ */
 class PgpParseTest extends TestCase
 {
     protected $_pgp;
@@ -60,10 +66,10 @@ class PgpParseTest extends TestCase
         $stream = new Horde_Stream_Temp();
         $stream->add($data, true);
 
-        return array(
-            array($data),
-            array($stream)
-        );
+        return [
+            [$data],
+            [$stream],
+        ];
     }
 
 }

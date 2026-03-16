@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Horde_Crypt_Smime tests.
  *
@@ -9,10 +10,15 @@
  * @package    Crypt
  * @subpackage UnitTests
  */
-namespace Horde\Crypt;
-use Horde_Test_Case as TestCase;
-use \Horde_Crypt;
 
+namespace Horde\Crypt;
+
+use PHPUnit\Framework\TestCase;
+use Horde_Crypt;
+
+/**
+ * @coversNothing
+ */
 class SmimeTest extends TestCase
 {
     protected function setUp(): void
@@ -24,9 +30,9 @@ class SmimeTest extends TestCase
 
     public function testSubjectAltName()
     {
-        $smime = Horde_Crypt::factory('Smime', array(
-            'temp' => sys_get_temp_dir()
-        ));
+        $smime = Horde_Crypt::factory('Smime', [
+            'temp' => sys_get_temp_dir(),
+        ]);
 
         $key = file_get_contents(
             __DIR__ . '/fixtures/smime_subjectAltName.pem'
@@ -40,9 +46,9 @@ class SmimeTest extends TestCase
 
     public function testExtractSignedContent()
     {
-        $smime = Horde_Crypt::factory('Smime', array(
-            'temp' => sys_get_temp_dir()
-        ));
+        $smime = Horde_Crypt::factory('Smime', [
+            'temp' => sys_get_temp_dir(),
+        ]);
         $message = file_get_contents(
             __DIR__ . '/fixtures/smime_signed_opaque.eml'
         );

@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright 2002-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2002-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (LGPL). If you
  * did not receive this file, see http://www.horde.org/licenses/lgpl21.
@@ -30,7 +31,7 @@ class Horde_Crypt_Smime extends Horde_Crypt
      * @param array $params  Configuration parameters:
      *   - temp: (string) Location of temporary directory.
      */
-    public function __construct($params = array())
+    public function __construct($params = [])
     {
         parent::__construct($params);
     }
@@ -64,7 +65,7 @@ class Horde_Crypt_Smime extends Horde_Crypt
      * @return string  The encrypted message.
      * @throws Horde_Crypt_Exception
      */
-    public function encrypt($text, $params = array())
+    public function encrypt($text, $params = [])
     {
         /* Check for availability of OpenSSL PHP extension. */
         $this->checkForOpenSSL();
@@ -89,7 +90,7 @@ class Horde_Crypt_Smime extends Horde_Crypt
      * @return string  The decrypted message.
      * @throws Horde_Crypt_Exception
      */
-    public function decrypt($text, $params = array())
+    public function decrypt($text, $params = [])
     {
         /* Check for availability of OpenSSL PHP extension. */
         $this->checkForOpenSSL();
@@ -97,8 +98,8 @@ class Horde_Crypt_Smime extends Horde_Crypt
         if (isset($params['type'])) {
             if ($params['type'] === 'message') {
                 return $this->_decryptMessage($text, $params);
-            } elseif (($params['type'] === 'signature') ||
-                      ($params['type'] === 'detached-signature')) {
+            } elseif (($params['type'] === 'signature')
+                      || ($params['type'] === 'detached-signature')) {
                 return $this->_decryptSignature($text, $params);
             }
         }
@@ -133,9 +134,9 @@ class Horde_Crypt_Smime extends Horde_Crypt
         file_put_contents($input, $text);
         unset($text);
 
-        $root_certs = array();
+        $root_certs = [];
         if (!is_array($certs)) {
-            $certs = array($certs);
+            $certs = [$certs];
         }
         foreach ($certs as $file) {
             if (file_exists($file)) {
@@ -143,10 +144,10 @@ class Horde_Crypt_Smime extends Horde_Crypt
             }
         }
 
-        $ob = new stdClass;
+        $ob = new stdClass();
 
-        if (!empty($root_certs) &&
-            (openssl_pkcs7_verify($input, 0, $output, $root_certs) === true)) {
+        if (!empty($root_certs)
+            && (openssl_pkcs7_verify($input, 0, $output, $root_certs) === true)) {
             /* Message verified */
             $ob->msg = Horde_Crypt_Translation::t("Message verified successfully.");
             $ob->verify = true;
@@ -199,8 +200,8 @@ class Horde_Crypt_Smime extends Horde_Crypt
          * content if no certs specified. Therefore, we need to use double
          * verification which the first one tries to extract certificats then
          * the second to extract content. */
-        if (openssl_pkcs7_verify($input, PKCS7_NOVERIFY, $certs) === true &&
-            openssl_pkcs7_verify($input, PKCS7_NOVERIFY, $certs, array(), $certs, $output) === true) {
+        if (openssl_pkcs7_verify($input, PKCS7_NOVERIFY, $certs) === true
+            && openssl_pkcs7_verify($input, PKCS7_NOVERIFY, $certs, [], $certs, $output) === true) {
             $ret = file_get_contents($output);
             if ($ret) {
                 return $ret;
@@ -224,24 +225,24 @@ class Horde_Crypt_Smime extends Horde_Crypt
     {
         /* Sign the part as a message */
         $message = $this->encrypt(
-            $mime_part->toString(array(
+            $mime_part->toString([
                 'headers' => true,
-                'canonical' => true
-            )),
+                'canonical' => true,
+            ]),
             $params
         );
 
         /* Break the result into its components */
         $mime_message = Horde_Mime_Part::parseMessage(
             $message,
-            array('forcemime' => true)
+            ['forcemime' => true]
         );
 
         $smime_sign = $mime_message->getPart('2');
         $smime_sign->setDescription(
             Horde_Crypt_Translation::t("S/MIME Signature")
         );
-        $smime_sign->setTransferEncoding('base64', array('send' => true));
+        $smime_sign->setTransferEncoding('base64', ['send' => true]);
 
         $smime_part = new Horde_Mime_Part();
         $smime_part->setType('multipart/signed');
@@ -253,7 +254,8 @@ class Horde_Crypt_Smime extends Horde_Crypt
             'application/pkcs7-signature'
         );
         $smime_part->setContentTypeParameter(
-            'micalg', $mime_message->getContentTypeParameter('micalg')
+            'micalg',
+            $mime_message->getContentTypeParameter('micalg')
         );
         $smime_part->addPart($mime_part);
         $smime_part->addPart($smime_sign);
@@ -272,14 +274,14 @@ class Horde_Crypt_Smime extends Horde_Crypt
      * @return Horde_Mime_Part  An encrypted MIME part object.
      * @throws Horde_Crypt_Exception
      */
-    public function encryptMIMEPart($mime_part, $params = array())
+    public function encryptMIMEPart($mime_part, $params = [])
     {
         /* Sign the part as a message */
         $message = $this->encrypt(
-            $mime_part->toString(array(
+            $mime_part->toString([
                 'headers' => true,
-                'canonical' => true
-            )),
+                'canonical' => true,
+            ]),
             $params
         );
 
@@ -294,7 +296,7 @@ class Horde_Crypt_Smime extends Horde_Crypt
         $msg->setContentTypeParameter('smime-type', 'enveloped-data');
         $msg->setContents(
             substr($message, strpos($message, "\n\n") + 2),
-            array('encoding' => 'base64')
+            ['encoding' => 'base64']
         );
 
         return $msg;
@@ -330,10 +332,10 @@ class Horde_Crypt_Smime extends Horde_Crypt
         unset($text);
 
         /* Encrypt the document. */
-        $ciphers = array(
+        $ciphers = [
             // SHOULD- support (RFC 5751 [2.7])
-            OPENSSL_CIPHER_3DES
-        );
+            OPENSSL_CIPHER_3DES,
+        ];
         if (defined('OPENSSL_CIPHER_AES_128_CBC')) {
             // MUST support (RFC 5751 [2.7])
             array_unshift($ciphers, OPENSSL_CIPHER_AES_128_CBC);
@@ -347,7 +349,7 @@ class Horde_Crypt_Smime extends Horde_Crypt
                 $input,
                 $output,
                 $params['pubkey'],
-                array(),
+                [],
                 0,
                 $val
             );
@@ -382,9 +384,9 @@ class Horde_Crypt_Smime extends Horde_Crypt
     protected function _encryptSignature($text, $params)
     {
         /* Check for required parameters. */
-        if (!isset($params['pubkey']) ||
-            !isset($params['privkey']) ||
-            !array_key_exists('passphrase', $params)) {
+        if (!isset($params['pubkey'])
+            || !isset($params['privkey'])
+            || !array_key_exists('passphrase', $params)) {
             throw new Horde_Crypt_Exception(Horde_Crypt_Translation::t("A public S/MIME key, private S/MIME key, and passphrase are required to sign a message."));
         }
 
@@ -407,12 +409,12 @@ class Horde_Crypt_Smime extends Horde_Crypt
             ? PKCS7_TEXT
             : PKCS7_DETACHED;
 
-        $privkey = (is_null($params['passphrase'])) ? $params['privkey'] : array($params['privkey'], $params['passphrase']);
+        $privkey = (is_null($params['passphrase'])) ? $params['privkey'] : [$params['privkey'], $params['passphrase']];
 
         if (empty($params['certs'])) {
-            $res = openssl_pkcs7_sign($input, $output, $params['pubkey'], $privkey, array(), $flags);
+            $res = openssl_pkcs7_sign($input, $output, $params['pubkey'], $privkey, [], $flags);
         } else {
-            $res = openssl_pkcs7_sign($input, $output, $params['pubkey'], $privkey, array(), $flags, $certs);
+            $res = openssl_pkcs7_sign($input, $output, $params['pubkey'], $privkey, [], $flags, $certs);
         }
 
         if (!$res) {
@@ -451,9 +453,9 @@ class Horde_Crypt_Smime extends Horde_Crypt
     protected function _decryptMessage($text, $params)
     {
         /* Check for required parameters. */
-        if (!isset($params['pubkey']) ||
-            !isset($params['privkey']) ||
-            !array_key_exists('passphrase', $params)) {
+        if (!isset($params['pubkey'])
+            || !isset($params['privkey'])
+            || !array_key_exists('passphrase', $params)) {
             throw new Horde_Crypt_Exception(Horde_Crypt_Translation::t("A public S/MIME key, private S/MIME key, and passphrase are required to decrypt a message."));
         }
 
@@ -467,7 +469,7 @@ class Horde_Crypt_Smime extends Horde_Crypt
 
         $privkey = is_null($params['passphrase'])
             ? $params['privkey']
-            : array($params['privkey'], $params['passphrase']);
+            : [$params['privkey'], $params['passphrase']];
         if (openssl_pkcs7_decrypt($input, $output, $params['pubkey'], $privkey)) {
             return file_get_contents($output);
         }
@@ -488,9 +490,11 @@ class Horde_Crypt_Smime extends Horde_Crypt
      * @return mixed  A Horde_Mime_Part object that is signed and encrypted.
      * @throws Horde_Crypt_Exception
      */
-    public function signAndEncryptMIMEPart($mime_part, $sign_params = array(),
-                                           $encrypt_params = array())
-    {
+    public function signAndEncryptMIMEPart(
+        $mime_part,
+        $sign_params = [],
+        $encrypt_params = []
+    ) {
         $part = $this->signMIMEPart($mime_part, $sign_params);
         return $this->encryptMIMEPart($part, $encrypt_params);
     }
@@ -504,7 +508,7 @@ class Horde_Crypt_Smime extends Horde_Crypt
      */
     public function certToHTML($cert)
     {
-        $fieldnames = array(
+        $fieldnames = [
             /* Common Fields */
             'description' => Horde_Crypt_Translation::t("Description"),
             'emailAddress' => Horde_Crypt_Translation::t("Email Address"),
@@ -526,8 +530,8 @@ class Horde_Crypt_Smime extends Horde_Crypt
             'subjectKeyIdentifier' => Horde_Crypt_Translation::t("Subject Key Identifier"),
             'certificatePolicies' => Horde_Crypt_Translation::t("Certificate Policies"),
             'crlDistributionPoints' => Horde_Crypt_Translation::t("CRL Distribution Points"),
-            'keyUsage' => Horde_Crypt_Translation::t("Key Usage")
-        );
+            'keyUsage' => Horde_Crypt_Translation::t("Key Usage"),
+        ];
 
         $details = $this->parseCert($cert);
 
@@ -540,23 +544,23 @@ class Horde_Crypt_Smime extends Horde_Crypt
         foreach ($details['subject'] as $key => $value) {
             $text .= sprintf(
                 "\n&nbsp;&nbsp;%s: %s",
-                 htmlspecialchars(
-                     isset($fieldnames[$key]) ? $fieldnames[$key] : $key
-                 ),
+                htmlspecialchars(
+                    $fieldnames[$key] ?? $key
+                ),
                 htmlspecialchars($value)
             );
         }
         $text .= "\n";
 
         /* Issuer */
-        $text .=
-            '<strong>' . Horde_Crypt_Translation::t("Issuer") . ':</strong>';
+        $text
+            .= '<strong>' . Horde_Crypt_Translation::t("Issuer") . ':</strong>';
 
         foreach ($details['issuer'] as $key => $value) {
             $text .= sprintf(
                 "\n&nbsp;&nbsp;%s: %s",
                 htmlspecialchars(
-                    isset($fieldnames[$key]) ? $fieldnames[$key] : $key
+                    $fieldnames[$key] ?? $key
                 ),
                 htmlspecialchars($value)
             );
@@ -564,20 +568,22 @@ class Horde_Crypt_Smime extends Horde_Crypt
         $text .= "\n";
 
         /* Dates  */
-        $text .=
-            '<strong>' . Horde_Crypt_Translation::t("Validity") . ':</strong>'
+        $text
+            .= '<strong>' . Horde_Crypt_Translation::t("Validity") . ':</strong>'
             . sprintf(
                 "\n&nbsp;&nbsp;%s: %s",
                 Horde_Crypt_Translation::t("Not Before"),
                 strftime(
-                    '%x %X', $details['validity']['notbefore']->getTimestamp()
+                    '%x %X',
+                    $details['validity']['notbefore']->getTimestamp()
                 )
             )
             . sprintf(
                 "\n&nbsp;&nbsp;%s: %s",
                 Horde_Crypt_Translation::t("Not After"),
                 strftime(
-                    '%x %X', $details['validity']['notafter']->getTimestamp()
+                    '%x %X',
+                    $details['validity']['notafter']->getTimestamp()
                 )
             );
 
@@ -592,7 +598,7 @@ class Horde_Crypt_Smime extends Horde_Crypt
                 $text .= sprintf(
                     "\n&nbsp;&nbsp;%s:\n%s",
                     htmlspecialchars(
-                        isset($fieldnames[$key]) ? $fieldnames[$key] : $key
+                        $fieldnames[$key] ?? $key
                     ),
                     $value
                 );
@@ -650,22 +656,22 @@ class Horde_Crypt_Smime extends Horde_Crypt
             throw new Horde_Crypt_Exception(sprintf(Horde_Crypt_Translation::t("Error parsing S/MIME certficate: %s"), openssl_error_string()));
         }
 
-        $details = array(
+        $details = [
             'extensions' => $data['extensions'],
             'issuer' => $data['issuer'],
             'serialNumber' => $data['serialNumber'],
             'subject' => $data['subject'],
-            'validity' => array(
+            'validity' => [
                 'notafter' => new DateTime('@' . $data['validTo_time_t']),
-                'notbefore' => new DateTime('@' . $data['validFrom_time_t'])
-            ),
-            'version' => $data['version']
-        );
+                'notbefore' => new DateTime('@' . $data['validFrom_time_t']),
+            ],
+            'version' => $data['version'],
+        ];
 
         // Add additional fields for BC purposes.
         $details['certificate'] = $details;
 
-        $bc_changes = array(
+        $bc_changes = [
             'emailAddress' => 'Email',
             'commonName' => 'CommonName',
             'organizationName' => 'Organisation',
@@ -676,9 +682,9 @@ class Horde_Crypt_Smime extends Horde_Crypt
             'streetAddress' => 'StreetAddress',
             'telephoneNumber' => 'TelephoneNumber',
             'surname' => 'Surname',
-            'givenName' => 'GivenName'
-        );
-        foreach (array('issuer', 'subject') as $val) {
+            'givenName' => 'GivenName',
+        ];
+        foreach (['issuer', 'subject'] as $val) {
             foreach (array_keys($details[$val]) as $key) {
                 if (isset($bc_changes[$key])) {
                     $details['certificate'][$val][$bc_changes[$key]] = $details[$val][$key];
@@ -746,7 +752,7 @@ class Horde_Crypt_Smime extends Horde_Crypt
                 if (strpos($name, ':') === false) {
                     continue;
                 }
-                list($kind, $value) = explode(':', $name, 2);
+                [$kind, $value] = explode(':', $name, 2);
                 if (Horde_String::lower($kind) == 'email') {
                     return $value;
                 }
@@ -791,7 +797,7 @@ class Horde_Crypt_Smime extends Horde_Crypt
         $input = $this->_createTempFile('horde-smime');
         $output = $this->_createTempFile('horde-smime');
 
-        $ob = new stdClass;
+        $ob = new stdClass();
 
         /* Write text to file */
         file_put_contents($input, $pkcs12);

@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright 2002-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2002-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (LGPL). If you
  * did not receive this file, see http://www.horde.org/licenses/lgpl21.
@@ -38,30 +39,30 @@ class Horde_Crypt_Pgp_Parse
      */
 
     /* Used for signed, encrypted, or compressed files. */
-    const ARMOR_MESSAGE = 1;
+    public const ARMOR_MESSAGE = 1;
 
     /* Used for signed files. */
-    const ARMOR_SIGNED_MESSAGE = 2;
+    public const ARMOR_SIGNED_MESSAGE = 2;
 
     /* Used for armoring public keys. */
-    const ARMOR_PUBLIC_KEY = 3;
+    public const ARMOR_PUBLIC_KEY = 3;
 
     /* Used for armoring private keys. */
-    const ARMOR_PRIVATE_KEY = 4;
+    public const ARMOR_PRIVATE_KEY = 4;
 
     /* Used for detached signatures, PGP/MIME signatures, and natures
      * following clearsigned messages. */
-    const ARMOR_SIGNATURE = 5;
+    public const ARMOR_SIGNATURE = 5;
 
     /* Regular text contained in an PGP message. */
-    const ARMOR_TEXT = 6;
+    public const ARMOR_TEXT = 6;
 
     /**
      * Metadata names for data.
      */
-    const PGP_ARMOR = 'pgp_armor'; /* @since 2.5.0 */
-    const SIG_CHARSET = 'pgp_sig_charset';
-    const SIG_RAW = 'pgp_sig_raw';
+    public const PGP_ARMOR = 'pgp_armor'; /* @since 2.5.0 */
+    public const SIG_CHARSET = 'pgp_sig_charset';
+    public const SIG_RAW = 'pgp_sig_raw';
 
     /**
      * Strings in armor header lines used to distinguish between the different
@@ -69,13 +70,13 @@ class Horde_Crypt_Pgp_Parse
      *
      * @var array
      */
-    protected $_armor = array(
+    protected $_armor = [
         'MESSAGE' => self::ARMOR_MESSAGE,
         'SIGNED MESSAGE' => self::ARMOR_SIGNED_MESSAGE,
         'PUBLIC KEY BLOCK' => self::ARMOR_PUBLIC_KEY,
         'PRIVATE KEY BLOCK' => self::ARMOR_PRIVATE_KEY,
-        'SIGNATURE' => self::ARMOR_SIGNATURE
-    );
+        'SIGNATURE' => self::ARMOR_SIGNATURE,
+    ];
 
     /**
      * Parses a message into text and PGP components.
@@ -93,10 +94,10 @@ class Horde_Crypt_Pgp_Parse
      */
     public function parse($text)
     {
-        $data = array();
-        $temp = array(
-            'type' => self::ARMOR_TEXT
-        );
+        $data = [];
+        $temp = [
+            'type' => self::ARMOR_TEXT,
+        ];
 
         if ($text instanceof Horde_Stream) {
             $stream = $text;
@@ -108,12 +109,12 @@ class Horde_Crypt_Pgp_Parse
 
         while (!$stream->eof()) {
             $val = rtrim($stream->getToChar("\n", false), "\r");
-            if ((strpos($val, '-----') === 0) &&
-                preg_match('/^-----(BEGIN|END) PGP ([^-]+)-----\s*$/', $val, $matches)) {
+            if ((strpos($val, '-----') === 0)
+                && preg_match('/^-----(BEGIN|END) PGP ([^-]+)-----\s*$/', $val, $matches)) {
                 if (isset($temp['data'])) {
                     $data[] = $temp;
                 }
-                $temp = array();
+                $temp = [];
 
                 if ($matches[1] == 'BEGIN') {
                     $temp['type'] = $this->_armor[$matches[2]];
@@ -127,8 +128,8 @@ class Horde_Crypt_Pgp_Parse
             }
         }
 
-        if (isset($temp['data']) &&
-            ((count($temp['data']) > 1) || !empty($temp['data'][0]))) {
+        if (isset($temp['data'])
+            && ((count($temp['data']) > 1) || !empty($temp['data'][0]))) {
             $data[] = $temp;
         }
 
@@ -151,8 +152,8 @@ class Horde_Crypt_Pgp_Parse
     {
         $parts = $this->parse($text);
 
-        if (empty($parts) ||
-            ((count($parts) == 1) && ($parts[0]['type'] == self::ARMOR_TEXT))) {
+        if (empty($parts)
+            || ((count($parts) == 1) && ($parts[0]['type'] == self::ARMOR_TEXT))) {
             return null;
         }
 
@@ -161,69 +162,69 @@ class Horde_Crypt_Pgp_Parse
 
         for ($val = reset($parts); $val; $val = next($parts)) {
             switch ($val['type']) {
-            case self::ARMOR_TEXT:
-                $part = new Horde_Mime_Part();
-                $part->setType('text/plain');
-                $part->setCharset($charset);
-                $part->setContents(implode("\n", $val['data']));
-                $new_part->addPart($part);
-                break;
-
-            case self::ARMOR_PUBLIC_KEY:
-                $part = new Horde_Mime_Part();
-                $part->setType('application/pgp-keys');
-                $part->setContents(implode("\n", $val['data']));
-                $new_part->addPart($part);
-                break;
-
-            case self::ARMOR_MESSAGE:
-                $part = new Horde_Mime_Part();
-                $part->setType('multipart/encrypted');
-                $part->setMetadata(self::PGP_ARMOR, true);
-                $part->setContentTypeParameter('protocol', 'application/pgp-encrypted');
-
-                $part1 = new Horde_Mime_Part();
-                $part1->setType('application/pgp-encrypted');
-                $part1->setContents("Version: 1\n");
-
-                $part2 = new Horde_Mime_Part();
-                $part2->setType('application/octet-stream');
-                $part2->setContents(implode("\n", $val['data']));
-                $part2->setDisposition('inline');
-
-                $part->addPart($part1);
-                $part->addPart($part2);
-
-                $new_part->addPart($part);
-                break;
-
-            case self::ARMOR_SIGNED_MESSAGE:
-                if (($sig = next($parts)) &&
-                    ($sig['type'] == self::ARMOR_SIGNATURE)) {
+                case self::ARMOR_TEXT:
                     $part = new Horde_Mime_Part();
-                    $part->setType('multipart/signed');
-                    // TODO: add micalg parameter
-                    $part->setContentTypeParameter('protocol', 'application/pgp-signature');
+                    $part->setType('text/plain');
+                    $part->setCharset($charset);
+                    $part->setContents(implode("\n", $val['data']));
+                    $new_part->addPart($part);
+                    break;
+
+                case self::ARMOR_PUBLIC_KEY:
+                    $part = new Horde_Mime_Part();
+                    $part->setType('application/pgp-keys');
+                    $part->setContents(implode("\n", $val['data']));
+                    $new_part->addPart($part);
+                    break;
+
+                case self::ARMOR_MESSAGE:
+                    $part = new Horde_Mime_Part();
+                    $part->setType('multipart/encrypted');
+                    $part->setMetadata(self::PGP_ARMOR, true);
+                    $part->setContentTypeParameter('protocol', 'application/pgp-encrypted');
 
                     $part1 = new Horde_Mime_Part();
-                    $part1->setType('text/plain');
-                    $part1->setCharset($charset);
-
-                    $part1_data = implode("\n", $val['data']);
-                    $part1->setContents(substr($part1_data, strpos($part1_data, "\n\n") + 2));
+                    $part1->setType('application/pgp-encrypted');
+                    $part1->setContents("Version: 1\n");
 
                     $part2 = new Horde_Mime_Part();
-
-                    $part2->setType('application/pgp-signature');
-                    $part2->setContents(implode("\n", $sig['data']));
-
-                    $part2->setMetadata(self::SIG_CHARSET, $charset);
-                    $part2->setMetadata(self::SIG_RAW, implode("\n", $val['data']) . "\n" . implode("\n", $sig['data']));
+                    $part2->setType('application/octet-stream');
+                    $part2->setContents(implode("\n", $val['data']));
+                    $part2->setDisposition('inline');
 
                     $part->addPart($part1);
                     $part->addPart($part2);
+
                     $new_part->addPart($part);
-                }
+                    break;
+
+                case self::ARMOR_SIGNED_MESSAGE:
+                    if (($sig = next($parts))
+                        && ($sig['type'] == self::ARMOR_SIGNATURE)) {
+                        $part = new Horde_Mime_Part();
+                        $part->setType('multipart/signed');
+                        // TODO: add micalg parameter
+                        $part->setContentTypeParameter('protocol', 'application/pgp-signature');
+
+                        $part1 = new Horde_Mime_Part();
+                        $part1->setType('text/plain');
+                        $part1->setCharset($charset);
+
+                        $part1_data = implode("\n", $val['data']);
+                        $part1->setContents(substr($part1_data, strpos($part1_data, "\n\n") + 2));
+
+                        $part2 = new Horde_Mime_Part();
+
+                        $part2->setType('application/pgp-signature');
+                        $part2->setContents(implode("\n", $sig['data']));
+
+                        $part2->setMetadata(self::SIG_CHARSET, $charset);
+                        $part2->setMetadata(self::SIG_RAW, implode("\n", $val['data']) . "\n" . implode("\n", $sig['data']));
+
+                        $part->addPart($part1);
+                        $part->addPart($part2);
+                        $new_part->addPart($part);
+                    }
             }
         }
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for the PGP binary backend.
  *
@@ -10,17 +11,21 @@
  * @package    Crypt
  * @subpackage UnitTests
  */
-namespace Horde\Crypt\Pgp;
-use \Horde_Crypt_Pgp_Backend_Binary;
 
+namespace Horde\Crypt\Pgp;
+
+use Horde_Crypt_Pgp_Backend_Binary;
+
+/**
+ * @coversNothing
+ */
 class BinaryTest extends TestBase
 {
     protected function _setUp()
     {
         $c = self::getConfig('CRYPT_TEST_CONFIG', __DIR__ . '/../');
-        $gnupg = isset($c['gnupg'])
-            ? $c['gnupg']
-            : '/usr/bin/gpg';
+        $gnupg = $c['gnupg']
+            ?? '/usr/bin/gpg';
 
         if (!is_executable($gnupg)) {
             $this->markTestSkipped(sprintf(
@@ -29,7 +34,7 @@ class BinaryTest extends TestBase
             ));
         }
 
-        $backends = array(new Horde_Crypt_Pgp_Backend_Binary($gnupg));
+        $backends = [new Horde_Crypt_Pgp_Backend_Binary($gnupg)];
         if (!empty($c['gnupg2'])) {
             $backends[] = new Horde_Crypt_Pgp_Backend_Binary($c['gnupg2']);
         }

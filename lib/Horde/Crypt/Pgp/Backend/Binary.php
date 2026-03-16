@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright 2015-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2015-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (LGPL). If you
  * did not receive this file, see http://www.horde.org/licenses/lgpl21.
@@ -25,8 +26,7 @@
  * @package   Crypt
  * @internal
  */
-class Horde_Crypt_Pgp_Backend_Binary
-extends Horde_Crypt_Pgp_Backend
+class Horde_Crypt_Pgp_Backend_Binary extends Horde_Crypt_Pgp_Backend
 {
     /**
      * GnuPG program location/common options.
@@ -74,7 +74,7 @@ extends Horde_Crypt_Pgp_Backend
         $this->_tempdir = Horde_Util::createTempDir($temp);
 
         /* Store the location of GnuPG and set common options. */
-        $this->_gnupg = array(
+        $this->_gnupg = [
             $gnupg,
             '--emit-version',
             '--no-tty',
@@ -82,13 +82,13 @@ extends Horde_Crypt_Pgp_Backend
             '--no-options',
             '--no-default-keyring',
             '--yes',
-            '--homedir ' . $this->_tempdir
-        );
+            '--homedir ' . $this->_tempdir,
+        ];
 
         /* GnuPG 2 requires specifying the pinentry-mode. */
-        $result = $this->_callGpg(array('--version'), 'r');
-        if (preg_match('/gpg \(GnuPG\) (\d+\.\d+\.\d+)/', $result->stdout, $version) &&
-            version_compare($version[1], '2.1.0', '>=')) {
+        $result = $this->_callGpg(['--version'], 'r');
+        if (preg_match('/gpg \(GnuPG\) (\d+\.\d+\.\d+)/', $result->stdout, $version)
+            && version_compare($version[1], '2.1.0', '>=')) {
             $this->_gnupg21 = true;
             if (version_compare($version[1], '2.1.12', '>=')) {
                 $this->_gnupg[] = '--pinentry-mode loopback';
@@ -121,7 +121,7 @@ extends Horde_Crypt_Pgp_Backend
 
         /* Create the config file necessary for GnuPG to run in batch mode. */
         /* TODO: Sanitize input, More user customizable? */
-        $input = array(
+        $input = [
             '%pubring ' . $pub_file,
             '%secring ' . $secret_file,
             'Key-Type: ' . $opts['key_type'],
@@ -132,8 +132,8 @@ extends Horde_Crypt_Pgp_Backend
             'Name-Email: ' . $opts['email'],
             'Expire-Date: ' . $expire,
             'Passphrase: ' . $opts['passphrase'],
-            'Preferences: AES256 AES192 AES CAST5 3DES SHA256 SHA512 SHA384 SHA224 SHA1 ZLIB BZIP2 ZIP Uncompressed'
-        );
+            'Preferences: AES256 AES192 AES CAST5 3DES SHA256 SHA512 SHA384 SHA224 SHA1 ZLIB BZIP2 ZIP Uncompressed',
+        ];
         if (!empty($opts['comment'])) {
             $input[] = 'Name-Comment: ' . $opts['comment'];
         }
@@ -141,11 +141,11 @@ extends Horde_Crypt_Pgp_Backend
 
         /* Run through gpg binary. */
         $result = $this->_callGpg(
-            array(
+            [
                 '--gen-key',
                 '--batch',
-                '--armor'
-            ),
+                '--armor',
+            ],
             'w',
             $input,
             true,
@@ -163,10 +163,10 @@ extends Horde_Crypt_Pgp_Backend
             );
         }
 
-        return array(
+        return [
             'public' => $public_key,
-            'private' => $secret_key
-        );
+            'private' => $secret_key,
+        ];
     }
 
     /**
@@ -185,14 +185,14 @@ extends Horde_Crypt_Pgp_Backend
         $input = $this->_createTempFile('horde-pgp');
         $sig_id = $uid_idx = 0;
         $key_idx = -1;
-        $out = array();
+        $out = [];
 
         $packetInfoHelper = function ($a) {
             return chr(hexdec($a[1]));
         };
 
         /* The list of PGP hash algorithms (from RFC 3156). */
-        $hashAlg = array(
+        $hashAlg = [
             1 => 'pgp-md5',
             2 => 'pgp-sha1',
             3 => 'pgp-ripemd160',
@@ -202,16 +202,16 @@ extends Horde_Crypt_Pgp_Backend
             8 => 'pgp-sha256',
             9 => 'pgp-sha384',
             10 => 'pgp-sha512',
-            11 => 'pgp-sha224'
-        );
+            11 => 'pgp-sha224',
+        ];
 
         /* Store message in temporary file. */
         file_put_contents($input, $pgpdata);
 
-        $cmdline = array(
+        $cmdline = [
             '--list-packets',
-            $input
-        );
+            $input,
+        ];
         $result = $this->_callGpg($cmdline, 'r', null, false, false, true);
 
         foreach (explode("\n", $result->stdout) as $line) {
@@ -250,10 +250,10 @@ extends Horde_Crypt_Pgp_Backend
                     // :public|secret key packet: section so we use the
                     // fingerprint
                     if (empty($keyid)) {
-                        $cmdline = array(
+                        $cmdline = [
                             '--with-fingerprint',
-                            $input
-                        );
+                            $input,
+                        ];
                         $results = $this->_callGpg($cmdline, 'r', null, false, false, true);
                         if (preg_match('/key fingerprint = ([0-9A-Z ]+)/i', $results->stdout, $m)) {
                             $keyid = substr(str_replace(' ', '', $m[1]), -16);
@@ -319,11 +319,11 @@ extends Horde_Crypt_Pgp_Backend
                     continue;
                 }
 
-                if (isset($out[$key_idx]['signature'][$header]['sig_' . $sig_id]['created']) &&
-                    preg_match('/expires after (?:(?:(\d+)y)?(\d+)d)?(\d+)h(\d+)m\)$/', $line, $matches)) {
-                    list(, $years, $days, $hours, $minutes) = $matches;
-                    $out[$key_idx]['signature'][$header]['sig_' . $sig_id]['expires'] =
-                        strtotime('+ ' . (int)$years . ' years + ' . (int)$days . ' days + ' . $hours . ' hours + ' . $minutes . ' minutes', $out[$key_idx]['signature'][$header]['sig_' . $sig_id]['created']);
+                if (isset($out[$key_idx]['signature'][$header]['sig_' . $sig_id]['created'])
+                    && preg_match('/expires after (?:(?:(\d+)y)?(\d+)d)?(\d+)h(\d+)m\)$/', $line, $matches)) {
+                    [, $years, $days, $hours, $minutes] = $matches;
+                    $out[$key_idx]['signature'][$header]['sig_' . $sig_id]['expires']
+                        = strtotime('+ ' . (int) $years . ' years + ' . (int) $days . ' days + ' . $hours . ' hours + ' . $minutes . ' minutes', $out[$key_idx]['signature'][$header]['sig_' . $sig_id]['created']);
                     continue;
                 }
 
@@ -359,10 +359,10 @@ extends Horde_Crypt_Pgp_Backend
         file_put_contents($input, $text);
 
         $result = $this->_callGpg(
-            array(
+            [
                 '--verify',
-                $input
-            ),
+                $input,
+            ],
             'r',
             null,
             true,
@@ -393,12 +393,12 @@ extends Horde_Crypt_Pgp_Backend
         $keyring = $this->_putInKeyring($pgpdata);
 
         $result = $this->_callGpg(
-            array(
+            [
                 '--fingerprint',
                 $keyring,
                 '--with-colons',
                 '--fixed-list-mode',
-            ),
+            ],
             'r',
             null,
             true,
@@ -408,7 +408,7 @@ extends Horde_Crypt_Pgp_Backend
         $this->_ensureResult($result);
 
         /* Parse fingerprints and key ids from output. */
-        $fingerprints = array();
+        $fingerprints = [];
         $keyid = null;
         $lines = explode("\n", $result->stdout);
 
@@ -432,11 +432,11 @@ extends Horde_Crypt_Pgp_Backend
     public function isEncryptedSymmetrically($text)
     {
         $result = $this->_callGpg(
-            array(
+            [
                 '--decrypt',
                 '--batch',
-                '--passphrase ""'
-            ),
+                '--passphrase ""',
+            ],
             'w',
             $text,
             true,
@@ -457,11 +457,11 @@ extends Horde_Crypt_Pgp_Backend
         file_put_contents($input, $text);
 
         /* Build command line. */
-        $cmdline = array(
+        $cmdline = [
             '--armor',
             '--batch',
-            '--always-trust'
-        );
+            '--always-trust',
+        ];
 
         if (empty($params['symmetric'])) {
             /* Store public key in temporary keyring. */
@@ -500,9 +500,9 @@ extends Horde_Crypt_Pgp_Backend
         $input = $this->_createTempFile('horde-pgp');
 
         /* Encryption requires both keyrings. */
-        $pub_keyring = $this->_putInKeyring(array($params['pubkey']));
+        $pub_keyring = $this->_putInKeyring([$params['pubkey']]);
         $sec_keyring = $this->_putInKeyring(
-            array($params['privkey']),
+            [$params['privkey']],
             'private'
         );
 
@@ -511,15 +511,15 @@ extends Horde_Crypt_Pgp_Backend
 
         /* Sign the document. */
         $result = $this->_callGpg(
-            array(
+            [
                 '--armor',
                 '--batch',
                 '--passphrase-fd 0',
                 $sec_keyring,
                 $pub_keyring,
                 (isset($params['sigtype']) && ($params['sigtype'] == 'cleartext')) ? '--clearsign' : '--detach-sign',
-                $input
-            ),
+                $input,
+            ],
             'w',
             $params['passphrase'],
             true,
@@ -541,18 +541,18 @@ extends Horde_Crypt_Pgp_Backend
         file_put_contents($input, $text);
 
         /* Build command line. */
-        $cmdline = array(
+        $cmdline = [
             '--always-trust',
             '--armor',
-            '--batch'
-        );
+            '--batch',
+        ];
         if (empty($params['no_passphrase'])) {
             $cmdline[] = '--passphrase-fd 0';
         }
         if (!empty($params['pubkey']) && !empty($params['privkey'])) {
             /* Decryption requires both keyrings. */
-            $pub_keyring = $this->_putInKeyring(array($params['pubkey']));
-            $sec_keyring = $this->_putInKeyring(array($params['privkey']), 'private');
+            $pub_keyring = $this->_putInKeyring([$params['pubkey']]);
+            $sec_keyring = $this->_putInKeyring([$params['privkey']], 'private');
             $cmdline[] = $sec_keyring;
             $cmdline[] = $pub_keyring;
         }
@@ -587,14 +587,14 @@ extends Horde_Crypt_Pgp_Backend
         file_put_contents($input, $text);
 
         /* Options for the GPG binary. */
-        $cmdline = array(
+        $cmdline = [
             '--armor',
             '--always-trust',
             '--batch',
             '--charset ' . (isset($params['charset']) ? escapeshellarg($params['charset']) : 'UTF-8'),
             $keyring,
-            '--verify'
-        );
+            '--verify',
+        ];
 
         /* Extra stuff to do if we are using a detached signature. */
         if ($params['type'] === 'detached-signature') {
@@ -616,17 +616,17 @@ extends Horde_Crypt_Pgp_Backend
      */
     public function getPublicKeyFromPrivateKey($data)
     {
-        $this->_putInKeyring(array($data), 'private');
+        $this->_putInKeyring([$data], 'private');
         $fingerprints = $this->getFingerprintsFromKey($data);
         reset($fingerprints);
 
-        $cmdline = array(
+        $cmdline = [
             '--armor',
             '--export',
-            key($fingerprints)
-        );
+            key($fingerprints),
+        ];
 
-        $result = $this->_callGpg($cmdline, 'r', array(), true, true);
+        $result = $this->_callGpg($cmdline, 'r', [], true, true);
         $this->_ensureResult($result);
 
         return $result->output;
@@ -651,7 +651,7 @@ extends Horde_Crypt_Pgp_Backend
             throw new Horde_Crypt_Exception($result);
         }
 
-        $ob = new stdClass;
+        $ob = new stdClass();
         $ob->message = $message;
         $ob->result = $result;
 
@@ -679,11 +679,15 @@ extends Horde_Crypt_Pgp_Backend
      *       make this public until H6 when we can require at least PHP 5.4.
      */
     public function _callGpg(
-        $options, $mode, $input = array(), $output = false, $stderr = false,
-        $parseable = false, $verbose = false
-    )
-    {
-        $data = new stdClass;
+        $options,
+        $mode,
+        $input = [],
+        $output = false,
+        $stderr = false,
+        $parseable = false,
+        $verbose = false
+    ) {
+        $data = new stdClass();
         $data->output = null;
         $data->stderr = null;
         $data->stdout = null;
@@ -727,7 +731,7 @@ extends Horde_Crypt_Pgp_Backend
                 $win32 = !strncasecmp(PHP_OS, 'WIN', 3);
 
                 if (!is_array($input)) {
-                    $input = array($input);
+                    $input = [$input];
                 }
 
                 foreach ($input as $line) {
@@ -782,17 +786,17 @@ extends Horde_Crypt_Pgp_Backend
     protected function _createKeyring($type = 'public')
     {
         switch (Horde_String::lower($type)) {
-        case 'public':
-            if (empty($this->_publicKeyring)) {
-                $this->_publicKeyring = $this->_createTempFile('horde-pgp');
-            }
-            return '--keyring ' . $this->_publicKeyring;
+            case 'public':
+                if (empty($this->_publicKeyring)) {
+                    $this->_publicKeyring = $this->_createTempFile('horde-pgp');
+                }
+                return '--keyring ' . $this->_publicKeyring;
 
-        case 'private':
-            if (empty($this->_privateKeyring)) {
-                $this->_privateKeyring = $this->_createTempFile('horde-pgp');
-            }
-            return '--secret-keyring ' . $this->_privateKeyring;
+            case 'private':
+                if (empty($this->_privateKeyring)) {
+                    $this->_privateKeyring = $this->_createTempFile('horde-pgp');
+                }
+                return '--secret-keyring ' . $this->_privateKeyring;
         }
     }
 
@@ -806,12 +810,12 @@ extends Horde_Crypt_Pgp_Backend
      * @return string  Command line keystring option to use with gpg program.
      * @throws Horde_Crypt_Exception
      */
-    protected function _putInKeyring($keys = array(), $type = 'public')
+    protected function _putInKeyring($keys = [], $type = 'public')
     {
         $type = Horde_String::lower($type);
 
         if (!is_array($keys)) {
-            $keys = array($keys);
+            $keys = [$keys];
         }
 
         /* Gnupg v2: --secret-keyring is not used, so import everything into
@@ -825,12 +829,12 @@ extends Horde_Crypt_Pgp_Backend
 
         /* Store the key(s) in the keyring. */
         $this->_callGpg(
-            array(
+            [
                 '--allow-secret-key-import',
                 '--batch',
                 '--fast-import',
-                $keyring
-            ),
+                $keyring,
+            ],
             'w',
             array_values($keys)
         );
@@ -851,8 +855,8 @@ extends Horde_Crypt_Pgp_Backend
         if (!empty($result->stderr)) {
             throw new Horde_Crypt_Exception(
                 preg_replace(
-                    array('/^gpg: /', '/\n/'),
-                    array('', '. '),
+                    ['/^gpg: /', '/\n/'],
+                    ['', '. '],
                     $result->stderr
                 )
             );
@@ -872,8 +876,8 @@ extends Horde_Crypt_Pgp_Backend
         if (!preg_match("/DECRYPTION_OKAY/", $result->status)) {
             throw new Horde_Crypt_Exception(
                 preg_replace(
-                    array('/^gpg: /', '/\n/'),
-                    array('', '. '),
+                    ['/^gpg: /', '/\n/'],
+                    ['', '. '],
                     $result->stderr
                 )
             );
@@ -889,9 +893,10 @@ extends Horde_Crypt_Pgp_Backend
      *
      * @return string  Filename of a temporary file.
      */
-    protected function _createTempFile($descrip = 'horde-crypt',
-                                       $delete = true)
-    {
+    protected function _createTempFile(
+        $descrip = 'horde-crypt',
+        $delete = true
+    ) {
         return Horde_Util::getTempFile(
             $descrip,
             $delete,

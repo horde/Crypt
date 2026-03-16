@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright 2002-2017 Horde LLC (http://www.horde.org/)
+ * Copyright 2002-2026 Horde LLC (http://www.horde.org/)
  *
  * See the enclosed file LICENSE for license information (LGPL). If you
  * did not receive this file, see http://www.horde.org/licenses/lgpl21.
@@ -28,7 +29,7 @@ class Horde_Crypt
      *
      * @var array
      */
-    protected $_params = array();
+    protected $_params = [];
 
     /**
      * Attempts to return a concrete Horde_Crypt instance based on $driver.
@@ -41,7 +42,7 @@ class Horde_Crypt
      * @return Horde_Crypt  The newly created concrete instance.
      * @throws Horde_Crypt_Exception
      */
-    public static function factory($driver, $params = array())
+    public static function factory($driver, $params = [])
     {
         /* Return a base Horde_Crypt object if no driver is specified. */
         if (empty($driver) || (strcasecmp($driver, 'none') == 0)) {
@@ -71,11 +72,11 @@ class Horde_Crypt
      * @param array $params  Configuration parameters:
      *   - email_charset: (string) The default email charset.
      */
-    public function __construct(array $params = array())
+    public function __construct(array $params = [])
     {
-        $this->_params = array_merge(array(
+        $this->_params = array_merge([
             'email_charset' => null,
-        ), $params);
+        ], $params);
     }
 
     /**
@@ -87,7 +88,7 @@ class Horde_Crypt
      *
      * @return array  The encrypted data.
      */
-    public function encrypt($data, $params = array())
+    public function encrypt($data, $params = [])
     {
         return $data;
     }
@@ -102,7 +103,7 @@ class Horde_Crypt
      * @return array  The decrypted data.
      * @throws Horde_Crypt_Exception
      */
-    public function decrypt($data, $params = array())
+    public function decrypt($data, $params = [])
     {
         return $data;
     }

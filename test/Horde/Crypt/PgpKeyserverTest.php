@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tests for accessing a public PGP keyserver.
  *
@@ -8,22 +9,48 @@
  * @package    Crypt
  * @subpackage UnitTests
  */
-namespace Horde\Crypt;
-use Horde_Test_Case as TestCase;
-use \Horde_Crypt_Pgp_Keyserver;
-use \Horde_Crypt;
 
+namespace Horde\Crypt;
+
+use PHPUnit\Framework\TestCase;
+use Horde_Crypt_Pgp_Keyserver;
+use Horde_Crypt;
+
+/**
+ * @coversNothing
+ */
 class PgpKeyserverTest extends TestCase
 {
     protected $_ks;
     protected $_gnupg;
 
+    /**
+     * Get configuration from environment or config file.
+     */
+    protected static function getConfig(string $env_key, string $config_path): array
+    {
+        // Try environment variable first
+        $config_file = getenv($env_key);
+
+        // Fall back to default config path
+        if (!$config_file || !file_exists($config_file)) {
+            $config_file = $config_path . '/conf.php';
+        }
+
+        // If config file exists, load it
+        if (file_exists($config_file)) {
+            return include $config_file;
+        }
+
+        // Return empty config
+        return [];
+    }
+
     protected function setUp(): void
     {
         $c = self::getConfig('CRYPT_TEST_CONFIG', __DIR__);
-        $this->_gnupg = isset($c['gnupg'])
-            ? $c['gnupg']
-            : '/usr/bin/gpg';
+        $this->_gnupg = $c['gnupg']
+            ?? '/usr/bin/gpg';
 
         if (!is_executable($this->_gnupg)) {
             $this->markTestSkipped(sprintf(
@@ -33,9 +60,9 @@ class PgpKeyserverTest extends TestCase
         }
 
         $this->_ks = new Horde_Crypt_Pgp_Keyserver(
-            Horde_Crypt::factory('Pgp', array(
-                'program' => $this->_gnupg
-            ))
+            Horde_Crypt::factory('Pgp', [
+                'program' => $this->_gnupg,
+            ])
         );
     }
 
@@ -70,10 +97,10 @@ class PgpKeyserverTest extends TestCase
         $this->expectException('Horde_Crypt_Exception');
 
         $ks = new Horde_Crypt_Pgp_Keyserver(
-            Horde_Crypt::factory('Pgp', array(
-                'program' => $this->_gnupg
-            )),
-            array('keyserver' => 'http://pgp.key-server.io')
+            Horde_Crypt::factory('Pgp', [
+                'program' => $this->_gnupg,
+            ]),
+            ['keyserver' => 'http://pgp.key-server.io']
         );
 
         $this->assertEquals(
