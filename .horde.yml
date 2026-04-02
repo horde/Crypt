@@ -20,7 +20,7 @@ authors:
     active: false
     role: lead
 version:
-  release: 3.0.0-beta4
+  release: 3.0.0-beta5
   api: 3.0.0alpha1
 state:
   release: beta
@@ -45,7 +45,6 @@ dependencies:
       openssl: '*'
 vendor: horde
 keywords: []
-
 quality:
   phpstan:
     level: 3
