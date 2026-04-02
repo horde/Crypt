@@ -18,6 +18,8 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Horde_Crypt;
 use Horde_String;
+use Exception;
+use ReflectionClass;
 
 abstract class TestBase extends TestCase
 {
@@ -83,7 +85,7 @@ abstract class TestBase extends TestCase
     public static function backendProvider()
     {
         // Create a temporary instance to call _setUp()
-        $reflection = new \ReflectionClass(static::class);
+        $reflection = new ReflectionClass(static::class);
         if ($reflection->isAbstract()) {
             return [];
         }
@@ -97,7 +99,7 @@ abstract class TestBase extends TestCase
                     'backends' => [$backend],
                 ])];
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // If setup fails, return empty array to skip tests
             return [];
         }

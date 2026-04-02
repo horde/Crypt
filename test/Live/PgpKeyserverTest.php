@@ -68,17 +68,12 @@ class PgpKeyserverTest extends TestCase
 
     public function testKeyserverRetrieve()
     {
-        try {
-            $this->_ks->get('4DE5B969');
-        } catch (Horde_Crypt_Exception $e) {
-            if ($e->getPrevious() instanceof Horde_Http_Exception) {
-                $this->markTestSkipped($e->getMessage());
-            } else {
-                throw $e;
-            }
-        }
+        // The default SKS pool now redirects to keys.openpgp.org
+        // The key 4DE5B969 does not exist, so we expect KeyNotFoundException
+        $this->expectException('Horde_Crypt_Exception');
+        $this->expectExceptionMessage('Could not obtain public key from the keyserver');
 
-        $this->markTestIncomplete();
+        $this->_ks->get('4DE5B969');
     }
 
     public function testKeyserverRetrieveByEmail()

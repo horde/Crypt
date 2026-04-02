@@ -18,9 +18,13 @@
  * Connects to a public key server via HKP (Horrowitz Keyserver Protocol).
  * http://tools.ietf.org/html/draft-shaw-openpgp-hkp-00
  *
+ * Refactored to use modern PSR-7/17/18 compliant implementation internally
+ * while maintaining full backward compatibility.
+ *
  * @author    Michael Slusarz <slusarz@horde.org>
+ * @author    Ralf Lang <lang@b1-systems.de>
  * @category  Horde
- * @copyright 2002-2017 Horde LLC
+ * @copyright 2002-2026 Horde LLC
  * @license   http://www.horde.org/licenses/lgpl21 LGPL 2.1
  * @package   Crypt
  * @since     2.4.0
@@ -49,6 +53,13 @@ class Horde_Crypt_Pgp_Keyserver
     protected $_pgp;
 
     /**
+     * PSR-compliant keyserver client.
+     *
+     * @var Horde\Crypt\Pgp\Keyserver\Client
+     */
+    private $_client;
+
+    /**
      * Constructor.
      *
      * @param Horde_Crypt_Pgp $pgp  A Horde_Crypt_Pgp object.
@@ -57,6 +68,8 @@ class Horde_Crypt_Pgp_Keyserver
      *   - http: (Horde_Http_Client) The HTTP client object to use.
      *   - keyserver: (string) The public PGP keyserver to use.
      *   - port: (integer) The public PGP keyserver port.
+     *   - protocol: (string) Force specific protocol: 'hkp_v1' or 'hkp_v2'.
+     *               If not specified, auto-detection is used.
      * </pre>
      */
     public function __construct($pgp, array $params = [])
@@ -77,6 +90,66 @@ class Horde_Crypt_Pgp_Keyserver
         $this->_keyserver = $params['keyserver']
             ?? 'http://pool.sks-keyservers.net';
         $this->_keyserver .= ':' . ($params['port'] ?? '11371');
+
+        // Create PSR-compliant client wrapper
+        $this->_client = $this->createPsrClient($params['protocol'] ?? null);
+    }
+
+    /**
+     * Create PSR-compliant keyserver client.
+     *
+     * @param string|null $protocolName Force specific protocol or null for auto-detect
+     *
+     * @return Horde\Crypt\Pgp\Keyserver\Client
+     */
+    private function createPsrClient(?string $protocolName = null)
+    {
+        $requestFactory = new Horde\Http\RequestFactory();
+        $streamFactory = new Horde\Http\StreamFactory();
+        $responseFactory = new Horde\Http\ResponseFactory();
+        $options = new Horde\Http\Client\Options();
+
+        // Create PSR-18 compliant HTTP client wrapper
+        $psrClient = new Horde\Http\HordeClientWrapper(
+            new Horde\Http\Client\Curl($responseFactory, $streamFactory, $options),
+            $requestFactory,
+            $streamFactory
+        );
+
+        // If protocol specified, create it directly (skip auto-detection)
+        $protocol = null;
+        if ($protocolName !== null) {
+            $protocol = match (strtolower($protocolName)) {
+                'hkp_v1', 'hkpv1', 'sks' => new Horde\Crypt\Pgp\Keyserver\Protocol\HkpV1(
+                    $this->_keyserver,
+                    $psrClient,
+                    $requestFactory,
+                    $streamFactory,
+                    $this->_pgp,
+                    new Horde\Crypt\Pgp\Keyserver\Parser\KeyExtractor(),
+                    new Horde\Crypt\Pgp\Keyserver\Parser\MachineReadable()
+                ),
+                'hkp_v2', 'hkpv2', 'modern', 'hagrid', 'hockeypuck' => new Horde\Crypt\Pgp\Keyserver\Protocol\HkpV2(
+                    $this->_keyserver,
+                    $psrClient,
+                    $requestFactory,
+                    $streamFactory,
+                    $this->_pgp
+                ),
+                default => throw new InvalidArgumentException(
+                    "Unknown protocol: $protocolName. Use 'hkp_v1', 'hkp_v2', or null for auto-detection."
+                ),
+            };
+        }
+
+        return new Horde\Crypt\Pgp\Keyserver\Client(
+            $this->_keyserver,
+            $psrClient,
+            $requestFactory,
+            $streamFactory,
+            $this->_pgp,
+            $protocol  // Pass protocol or null for auto-detection
+        );
     }
 
     /**
@@ -89,25 +162,17 @@ class Horde_Crypt_Pgp_Keyserver
      */
     public function get($keyid)
     {
-        /* Connect to the public keyserver. */
-        $url = $this->_createUrl('/pks/lookup', [
-            'op' => 'get',
-            'search' => $this->_pgp->getKeyIDString($keyid),
-        ]);
-
         try {
-            $output = $this->_http->get($url)->getBody();
-        } catch (Horde_Http_Exception $e) {
-            throw new Horde_Crypt_Exception($e);
+            return $this->_client->getKey($keyid);
+        } catch (Horde\Crypt\Pgp\Keyserver\Exception\KeyNotFoundException $e) {
+            throw new Horde_Crypt_Exception(
+                Horde_Crypt_Translation::t("Could not obtain public key from the keyserver."),
+                0,
+                $e
+            );
+        } catch (Horde\Crypt\Pgp\Keyserver\Exception\KeyserverException $e) {
+            throw new Horde_Crypt_Exception($e->getMessage(), 0, $e);
         }
-
-        /* Grab PGP key from output. */
-        if (($start = strstr($output, '-----BEGIN'))) {
-            $length = strpos($start, '-----END') + 34;
-            return substr($start, 0, $length);
-        }
-
-        throw new Horde_Crypt_Exception(Horde_Crypt_Translation::t("Could not obtain public key from the keyserver."));
     }
 
     /**
@@ -119,31 +184,15 @@ class Horde_Crypt_Pgp_Keyserver
      */
     public function put($pubkey)
     {
-        /* Get the key ID of the public key. */
-        $info = $this->_pgp->pgpPacketInformation($pubkey);
-
-        /* See if the public key already exists on the keyserver. */
         try {
-            $this->get($info['keyid']);
-        } catch (Horde_Crypt_Exception $e) {
-            $pubkey = 'keytext=' . urlencode(rtrim($pubkey));
-            try {
-                $this->_http->post(
-                    $this->_createUrl('/pks/add'),
-                    $pubkey,
-                    [
-                        'User-Agent: Horde Application Framework',
-                        'Content-Type: application/x-www-form-urlencoded',
-                        'Content-Length: ' . strlen($pubkey),
-                        'Connection: close',
-                    ]
-                );
-            } catch (Horde_Http_Exception $e) {
-                throw new Horde_Crypt_Exception($e);
-            }
+            $this->_client->putKey($pubkey);
+        } catch (Horde\Crypt\Pgp\Keyserver\Exception\KeyAlreadyExistsException $e) {
+            throw new Horde_Crypt_Exception(
+                Horde_Crypt_Translation::t("Key already exists on the public keyserver.")
+            );
+        } catch (Horde\Crypt\Pgp\Keyserver\Exception\KeyserverException $e) {
+            throw new Horde_Crypt_Exception($e->getMessage());
         }
-
-        throw new Horde_Crypt_Exception(Horde_Crypt_Translation::t("Key already exists on the public keyserver."));
     }
 
     /**
@@ -157,95 +206,24 @@ class Horde_Crypt_Pgp_Keyserver
      */
     public function getKeyId($address)
     {
-        $pubkey = null;
-
-        /* Connect to the public keyserver. */
-        $url = $this->_createUrl('/pks/lookup', [
-            'op' => 'index',
-            'options' => 'mr',
-            'search' => $address,
-        ]);
-
-        // Some keyservers are broken, third time's a charm.
-        $output = null;
-        for ($i = 0; $i < 3; $i++) {
-            try {
-                $response = $this->_http->get($url);
-                // Some keyservers return HTML, try again.
-                if (strpos($response->getHeader('Content-Type'), 'text/plain') !== 0) {
-                    continue;
-                }
-                $body = $response->getBody();
-                if (urlencode(urldecode($body)) === $body) {
-                    $output = urldecode($body);
-                } else {
-                    $output = $body;
-                }
-            } catch (Horde_Http_Exception $e) {
-                throw new Horde_Crypt_Exception($e);
-            }
-        }
-
-        if (!$output) {
-            throw new Horde_Crypt_Exception(
-                Horde_Crypt_Translation::t("Could not obtain public key from the keyserver.")
-            );
-        }
-
-        if (strpos($output, '-----BEGIN PGP PUBLIC KEY BLOCK') !== false) {
-            $pubkey = $output;
-        } elseif (strpos($output, 'pub:') !== false) {
-            $output = explode("\n", $output);
-            $keyids = $keyuids = [];
-            $curid = null;
-
-            foreach ($output as $line) {
-                if (substr($line, 0, 4) == 'pub:') {
-                    $line = explode(':', $line);
-                    /* Ignore invalid lines and expired keys. */
-                    if (count($line) != 7
-                        || (!empty($line[5]) && $line[5] <= time())) {
-                        continue;
-                    }
-                    $curid = $line[4];
-                    $keyids[$curid] = $line[1];
-                } elseif (!is_null($curid) && substr($line, 0, 4) == 'uid:') {
-                    preg_match("/<([^>]+)>/", $line, $matches);
-                    $keyuids[$curid][] = $matches[1];
-                }
-            }
-
-            /* Remove keys without a matching UID. */
-            foreach ($keyuids as $id => $uids) {
-                $match = false;
-                foreach ($uids as $uid) {
-                    if ($uid == $address) {
-                        $match = true;
-                        break;
-                    }
-                }
-                if (!$match) {
-                    unset($keyids[$id]);
-                }
-            }
-
-            /* Sort by timestamp to use the newest key. */
-            if (count($keyids)) {
-                ksort($keyids);
-                $pubkey = $this->get(array_pop($keyids));
-            }
-        }
-
-        if ($pubkey) {
+        try {
+            $pubkey = $this->_client->findKeyByEmail($address);
             $sig = $this->_pgp->pgpPacketSignature($pubkey, $address);
+
             if (!empty($sig['keyid'])
                 && (empty($sig['public_key']['expires'])
-                 || $sig['public_key']['expires'] > time())) {
+                || $sig['public_key']['expires'] > time())) {
                 return substr($this->_pgp->getKeyIDString($sig['keyid']), 2);
             }
+        } catch (Horde\Crypt\Pgp\Keyserver\Exception\KeyNotFoundException $e) {
+            // Fall through to exception below
+        } catch (Horde\Crypt\Pgp\Keyserver\Exception\KeyserverException $e) {
+            throw new Horde_Crypt_Exception($e->getMessage());
         }
 
-        throw new Horde_Crypt_Exception(Horde_Crypt_Translation::t("Could not obtain public key from the keyserver."));
+        throw new Horde_Crypt_Exception(
+            Horde_Crypt_Translation::t("Could not obtain public key from the keyserver.")
+        );
     }
 
     /**

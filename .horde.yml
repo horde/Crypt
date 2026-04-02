@@ -44,3 +44,8 @@ dependencies:
       hash: '*'
       openssl: '*'
 vendor: horde
+keywords: []
+
+quality:
+  phpstan:
+    level: 3

@@ -36,6 +36,9 @@
     "autoload": {
         "psr-0": {
             "Horde_Crypt": "lib/"
+        },
+        "psr-4": {
+            "Horde\\Crypt\\": "src/Horde/Crypt/"
         }
     },
     "autoload-dev": {
