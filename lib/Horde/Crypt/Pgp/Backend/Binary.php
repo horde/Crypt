@@ -170,6 +170,12 @@ class Horde_Crypt_Pgp_Backend_Binary extends Horde_Crypt_Pgp_Backend
     }
 
     /**
+     * Returns information on a PGP data block.
+     *
+     * @param string $pgpdata  The PGP data block.
+     *
+     * @return array  An array with information on the PGP data block.
+     *                {@see Horde_Crypt_Pgp::pgpPacketInformation()}
      */
     public function packetInfo($pgpdata)
     {
@@ -178,6 +184,22 @@ class Horde_Crypt_Pgp_Backend_Binary extends Horde_Crypt_Pgp_Backend
     }
 
     /**
+     * Returns all information on a PGP data block.
+     *
+     * @since Horde_Crypt 2.7.0
+     *
+     * @param string $pgpdata  The PGP data block.
+     *
+     * @return array  An array with information on the PGP data block. Each key
+     *                represents a key in the data, with an array of signature
+     *                information. Each signature array contains:
+     *                - id{n}: Array with UID information
+     *                  - name: (string) Full name from UID
+     *                  - email: (string) Email address from UID
+     *                  - comment: (string) Comment from UID
+     *                  - keyid: (string) 16-character hex key ID
+     *                  - sig_{hex}: (array) Signature verification details
+     *                {@see Horde_Crypt_Pgp::pgpPacketInformationMultiple()}
      */
     public function packetInfoMultiple($pgpdata)
     {
@@ -235,20 +257,39 @@ class Horde_Crypt_Pgp_Backend_Binary extends Horde_Crypt_Pgp_Backend
                 if (strpos($lowerLine, ':user id packet:') !== false) {
                     $uid_idx++;
                     $line = preg_replace_callback('/\\\\x([0-9a-f]{2})/', $packetInfoHelper, $line);
-                    if (!preg_match('/"([^\<]+)\<([^\>]+)\>"/', $line, $matches) && !preg_match('/"([^\<]+@[^\>]+)"/', $line, $matches)) {
+
+                    // Try standard RFC-2822 format first: "Name (Comment) <email>" or "Name <email>"
+                    if (preg_match('/"([^\<]+)\<([^\>]+)\>"/', $line, $matches)) {
+                        $header = 'id' . $uid_idx;
+
+                        // Check for optional comment in name field: "Name (Comment)"
+                        if (preg_match('/([^\(]+)\((.+)\)$/', trim($matches[1]), $comment_matches)) {
+                            $out[$key_idx]['signature'][$header]['name'] = trim($comment_matches[1]);
+                            $out[$key_idx]['signature'][$header]['comment'] = $comment_matches[2];
+                        } else {
+                            $out[$key_idx]['signature'][$header]['name'] = trim($matches[1]);
+                            $out[$key_idx]['signature'][$header]['comment'] = '';
+                        }
+
+                        $out[$key_idx]['signature'][$header]['email'] = $matches[2];
+
+                    // Try email-only format: "user@example.com" (no name, no angle brackets)
+                    } elseif (preg_match('/"([^\<]+@[^\>]+)"/', $line, $matches)) {
+                        $header = 'id' . $uid_idx;
+
+                        // Email-only format has no name or comment
+                        $out[$key_idx]['signature'][$header]['name'] = '';
+                        $out[$key_idx]['signature'][$header]['comment'] = '';
+                        $out[$key_idx]['signature'][$header]['email'] = $matches[1];
+
+                    } else {
+                        // Unrecognized UID format - skip this packet
                         continue;
                     }
-                    $header = 'id' . $uid_idx;
-                    if (preg_match('/([^\(]+)\((.+)\)$/', trim($matches[1]), $comment_matches)) {
-                        $out[$key_idx]['signature'][$header]['name'] = trim($comment_matches[1]);
-                        $out[$key_idx]['signature'][$header]['comment'] = $comment_matches[2];
-                    } else {
-                        $out[$key_idx]['signature'][$header]['name'] = trim($matches[1]);
-                        $out[$key_idx]['signature'][$header]['comment'] = '';
-                    }
+
+                    // Extract keyid from fingerprint if not already set
                     // Some gpg versions do not return keyid in the
-                    // :public|secret key packet: section so we use the
-                    // fingerprint
+                    // :public|secret key packet: section so we use the fingerprint
                     if (empty($keyid)) {
                         $cmdline = [
                             '--with-fingerprint',
@@ -259,11 +300,7 @@ class Horde_Crypt_Pgp_Backend_Binary extends Horde_Crypt_Pgp_Backend
                             $keyid = substr(str_replace(' ', '', $m[1]), -16);
                         }
                     }
-                    if (array_key_exists(2,$matches)) {
-                      $out[$key_idx]['signature'][$header]['email'] = $matches[2];
-                    } else {
-                      $out[$key_idx]['signature'][$header]['email'] = $matches[1];
-                    }
+
                     $out[$key_idx]['signature'][$header]['keyid'] = $keyid;
                     continue;
                 }

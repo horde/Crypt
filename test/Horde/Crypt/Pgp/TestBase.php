@@ -325,6 +325,31 @@ Version: GnuPG %s
     }
 
     #[DataProvider("backendProvider")]
+    public function testPgpPacketInformationEmailOnly($pgp)
+    {
+        $out = $pgp->pgpPacketInformation($this->_getFixture('pgp_email_only.asc'));
+
+        // Verify key structure
+        $this->assertArrayHasKey('public_key', $out);
+        $this->assertArrayNotHasKey('secret_key', $out);
+        $this->assertArrayHasKey('signature', $out);
+        $this->assertArrayHasKey('keyid', $out);
+
+        // Verify signature count (id1 + _SIGNATURE)
+        $this->assertEquals(2, count($out['signature']));
+
+        // Verify email-only UID fields
+        $this->assertArrayHasKey('id1', $out['signature']);
+        $this->assertEquals('', $out['signature']['id1']['name']);
+        $this->assertEquals('emailonly@example.com', $out['signature']['id1']['email']);
+        $this->assertEquals('', $out['signature']['id1']['comment']);
+        $this->assertArrayHasKey('keyid', $out['signature']['id1']);
+
+        // Verify keyid is 16-character hex string
+        $this->assertMatchesRegularExpression('/^[0-9A-F]{16}$/', $out['keyid']);
+    }
+
+    #[DataProvider("backendProvider")]
     public function testPgpPacketSignature($pgp)
     {
         $out = $pgp->pgpPacketSignature(
@@ -359,6 +384,34 @@ Version: GnuPG %s
     }
 
     #[DataProvider("backendProvider")]
+    public function testPgpPacketSignatureEmailOnly($pgp)
+    {
+        // Test successful lookup by email address
+        $out = $pgp->pgpPacketSignature(
+            $this->_getFixture('pgp_email_only.asc'),
+            'emailonly@example.com'
+        );
+
+        $this->assertArrayHasKey('keyid', $out);
+        $this->assertArrayHasKey('name', $out);
+        $this->assertArrayHasKey('email', $out);
+        $this->assertArrayHasKey('comment', $out);
+
+        // Verify email-only format field values
+        $this->assertEquals('', $out['name']);
+        $this->assertEquals('emailonly@example.com', $out['email']);
+        $this->assertEquals('', $out['comment']);
+
+        // Test lookup failure with wrong email
+        $out = $pgp->pgpPacketSignature(
+            $this->_getFixture('pgp_email_only.asc'),
+            'wrong@example.com'
+        );
+
+        $this->assertArrayNotHasKey('keyid', $out);
+    }
+
+    #[DataProvider("backendProvider")]
     public function testPgpPacketSignatureByUidIndex($pgp)
     {
         $out = $pgp->pgpPacketSignatureByUidIndex(
@@ -390,6 +443,34 @@ Version: GnuPG %s
             'keyid',
             $out
         );
+    }
+
+    #[DataProvider("backendProvider")]
+    public function testPgpPacketSignatureByUidIndexEmailOnly($pgp)
+    {
+        // Test successful lookup by UID index
+        $out = $pgp->pgpPacketSignatureByUidIndex(
+            $this->_getFixture('pgp_email_only.asc'),
+            'id1'
+        );
+
+        $this->assertArrayHasKey('keyid', $out);
+        $this->assertArrayHasKey('name', $out);
+        $this->assertArrayHasKey('email', $out);
+        $this->assertArrayHasKey('comment', $out);
+
+        // Verify email-only format field values
+        $this->assertEquals('', $out['name']);
+        $this->assertEquals('emailonly@example.com', $out['email']);
+        $this->assertEquals('', $out['comment']);
+
+        // Test lookup failure with non-existent index
+        $out = $pgp->pgpPacketSignatureByUidIndex(
+            $this->_getFixture('pgp_email_only.asc'),
+            'id2'
+        );
+
+        $this->assertArrayNotHasKey('keyid', $out);
     }
 
     #[DataProvider("backendProvider")]
@@ -428,6 +509,24 @@ Key Fingerprint:  966F4BA9569DE6F65E8253977CA74426BADEABD7
 ',
             $pgp->pgpPrettyKey($this->_getPrivateKey())
         );
+    }
+
+    #[DataProvider("backendProvider")]
+    public function testPgpPrettyKeyEmailOnly($pgp)
+    {
+        putenv('LANGUAGE=C');
+
+        $output = $pgp->pgpPrettyKey($this->_getFixture('pgp_email_only.asc'));
+
+        // Verify output contains key information
+        $this->assertStringContainsString('Key Type:', $output);
+        $this->assertStringContainsString('Public Key', $output);
+        $this->assertStringContainsString('E-Mail:', $output);
+        $this->assertStringContainsString('emailonly@example.com', $output);
+
+        // Verify empty name/comment are shown
+        $this->assertStringContainsString('Name:', $output);
+        $this->assertStringContainsString('Comment:', $output);
     }
 
     #[DataProvider("pgpGetFingerprintsFromKeyProvider")]
