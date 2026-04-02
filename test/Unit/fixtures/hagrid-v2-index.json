@@ -1,0 +1,26 @@
+{
+  "keys": [
+    {
+      "keyid": "ABCDEF1234567890",
+      "algorithm": 1,
+      "length": 4096,
+      "created": 1640000000,
+      "expires": null,
+      "flags": "",
+      "uids": [
+        "Modern User <modern@example.com>"
+      ]
+    },
+    {
+      "keyid": "1234567890ABCDEF",
+      "algorithm": 1,
+      "length": 2048,
+      "created": 1635000000,
+      "expires": 1735689600,
+      "flags": "",
+      "uids": [
+        "Another User <another@example.com>"
+      ]
+    }
+  ]
+}

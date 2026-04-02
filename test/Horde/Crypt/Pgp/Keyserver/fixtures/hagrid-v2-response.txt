@@ -1,0 +1,10 @@
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+mQINBGQxMjMBEADHagridTestKeyDataNotRealButValidFormatPurposesOnly12345
+67890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789
+TestDataForHKPv2ProtocolImplementationVerificationThisIsNotARealKeyBut
+FormatIsCorrectForTestingParsersAndProtocolImplementations1234567890ABC
+DEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=Test
+ModernKeyserverResponseFormat1234567890ABCDEF
+=XYZ1
+-----END PGP PUBLIC KEY BLOCK-----

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head><title>Public Key Server -- Get "0xABCDEF1234567890"</title></head>
+<body>
+<h1>Public Key Server -- Get "0xABCDEF1234567890"</h1>
+<pre>
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+mQINBGQxMjMBEADExampleKeyDataHereThisIsATestFixture1234567890ABCDEF
+GHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/==Example
+KeyBlockForTestingPurposesOnly123456789012345678901234567890123456789
+ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789Test
+DataContentHereForPGPPublicKeyBlockThisIsJustForTestingPurposesNotReal
+KeyMaterialButValidFormat1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ+/=Test
+=ABCD
+-----END PGP PUBLIC KEY BLOCK-----
+
+</pre>
+</body>
+</html>
