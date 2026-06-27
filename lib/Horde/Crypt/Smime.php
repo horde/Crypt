@@ -1,5 +1,7 @@
 <?php
 
+use Horde\Util\Util;
+
 /**
  * Copyright 2002-2026 Horde LLC (http://www.horde.org/)
  *
@@ -711,7 +713,7 @@ class Horde_Crypt_Smime extends Horde_Crypt
      */
     public function checkForOpenSSL()
     {
-        if (!Horde_Util::extensionExists('openssl')) {
+        if (!Util::extensionExists('openssl')) {
             throw new Horde_Crypt_Exception(Horde_Crypt_Translation::t("The openssl module is required for the Horde_Crypt_Smime:: class."));
         }
     }
@@ -890,7 +892,7 @@ class Horde_Crypt_Smime extends Horde_Crypt
      */
     protected function _createTempFile($descrip = 'horde-crypt', $delete = true)
     {
-        return Horde_Util::getTempFile($descrip, $delete, $this->_params['temp'], true);
+        return Util::getTempFile($descrip, $delete, $this->_params['temp'], true);
     }
 
 }

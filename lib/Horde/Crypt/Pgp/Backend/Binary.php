@@ -1,5 +1,7 @@
 <?php
 
+use Horde\Util\Util;
+
 /**
  * Copyright 2015-2026 Horde LLC (http://www.horde.org/)
  *
@@ -71,7 +73,7 @@ class Horde_Crypt_Pgp_Backend_Binary extends Horde_Crypt_Pgp_Backend
      */
     public function __construct($gnupg, $temp = null)
     {
-        $this->_tempdir = Horde_Util::createTempDir($temp);
+        $this->_tempdir = Util::createTempDir($temp);
 
         /* Store the location of GnuPG and set common options. */
         $this->_gnupg = [
@@ -273,7 +275,7 @@ class Horde_Crypt_Pgp_Backend_Binary extends Horde_Crypt_Pgp_Backend
 
                         $out[$key_idx]['signature'][$header]['email'] = $matches[2];
 
-                    // Try email-only format: "user@example.com" (no name, no angle brackets)
+                        // Try email-only format: "user@example.com" (no name, no angle brackets)
                     } elseif (preg_match('/"([^\<]+@[^\>]+)"/', $line, $matches)) {
                         $header = 'id' . $uid_idx;
 
@@ -938,7 +940,7 @@ class Horde_Crypt_Pgp_Backend_Binary extends Horde_Crypt_Pgp_Backend
         $descrip = 'horde-crypt',
         $delete = true
     ) {
-        return Horde_Util::getTempFile(
+        return Util::getTempFile(
             $descrip,
             $delete,
             $this->_tempdir,
