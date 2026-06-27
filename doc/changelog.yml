@@ -1,58 +1,14 @@
 ---
-3.0.0alpha5:
-  api: 3.0.0alpha1
-  state:
-    release: alpha
-    api: alpha
-  date: 2022-11-05
-  license:
-    identifier: LGPL-2.1
-    uri: http://www.horde.org/licenses/lgpl21
-  notes: |+
-3.0.0alpha4:
-  api: 3.0.0alpha1
-  state:
-    release: alpha
-    api: alpha
-  date: 2022-11-05
-  license:
-    identifier: LGPL-2.1
-    uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [rla] Alpha Release for PHP 8.
-    |+
-3.0.0alpha3:
-  api: 3.0.0alpha1
-  state:
-    release: alpha
-    api: alpha
-  date: 2021-03-13
-  license:
-    identifier: LGPL-2.1
-    uri: http://www.horde.org/licenses/lgpl21
-  notes: |+
-3.0.0alpha2:
-  api: 3.0.0alpha1
-  state:
-    release: alpha
-    api: alpha
-  date: 2021-02-24
-  license:
-    identifier: LGPL-2.1
-    uri: http://www.horde.org/licenses/lgpl21
-  notes: |+
-3.0.0alpha1:
-  api: 3.0.0alpha1
+3.0.0:
+  api: 3.0.0
   state:
     release: stable
     api: stable
-  date: 2021-02-24
+  date: 2026-06-27
   license:
-    identifier: LGPL-2.1
-    uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [jan] Enforce MDC verification when decrypting PGP messages to mitigate EFAIL attacks (Immerda <admin@immerda.ch>).
-    |+
+    identifier: LGPL-2.1-only
+    uri: https://spdx.org/licenses/LGPL-2.1-only.html
+  notes: "chore: refresh qc fixes and platform deps\nchore: Update workflow dependency"
 3.0.0-beta5:
   api: 3.0.0-beta5
   state:
@@ -62,11 +18,7 @@
   license:
     identifier: LGPL-2.1-only
     uri: https://spdx.org/licenses/LGPL-2.1-only.html
-  notes: |-
-    fix(pgp): properly parse email-only UID packets with tests and PHPDoc
-    support parsing public keys with just an email (#9)
-    feat: Modern PSR-18 implementation of HKPv1 (SKS) and HKPv2 protocol clients.
-    lib/Horde/Crypt/Pgp/Keyserver.php: Newer keyserver implementations URL-encode the body returned by index lookups.
+  notes: "fix(pgp): properly parse email-only UID packets with tests and PHPDoc\nsupport parsing public keys with just an email (#9)\nfeat: Modern PSR-18 implementation of HKPv1 (SKS) and HKPv2 protocol clients.\nlib/Horde/Crypt/Pgp/Keyserver.php: Newer keyserver implementations URL-encode the body returned by index lookups."
 3.0.0-beta4:
   api: 3.0.0-beta4
   state:
@@ -86,91 +38,57 @@
   license:
     identifier: LGPL-2.1-only
     uri: https://spdx.org/licenses/LGPL-2.1-only.html
-  notes: |-
-    Merge pull request #11 from maintaina-com/horde_fix-verifyPassphrase-php8
-    Merge pull request #3 from sunweaver/pr/4096-bit-key-strength
-    make Smime::verifyPassphrase compatibe with php8
-    Development mode for Crypt-3.0.0alpha5
-    Released Crypt-3.0.0alpha4
-    Update metadata and workflows for PHP 8 support
-    Add CI job for satis repo update
-    no errors
-    Update ci.yml
-    Update bootstrap.php
-    no errors left, added ci. & phpdoc.yml
-    no errors left
-    WIP three errors left
-    Development mode for Crypt-3.0.0alpha5
-    Released Crypt-3.0.0alpha3
-    Development mode for Crypt-3.0.0alpha4
-    Released Crypt-3.0.0alpha2
-    Development mode for Crypt-3.0.0alpha3
-    Released Crypt-3.0.0alpha1
-    Rebase FRAMEWORK_6_0 on current master as of 2023-12-04 Replace commit 63f74ed1dfe37f277eb2323b40081168f04ea695
-    Fix duplicate contributor.
-    [jan] Use 16 bit long PGP key IDs. (PR #6, Mike Gabriel <mike.gabriel@das-netzwerkteam.de>).
-    Merge branch 'sunweaver-pr/16-digit-short-ids'
-    Adopt tests to 16 bit long key IDs.
-    Merge branch 'pr/16-digit-short-ids' of github.com:sunweaver/Horde_Crypt into sunweaver-pr/16-digit-short-ids
-    [jan] Improve PHP 8 compatibility in S/MIME backend (PR #4, Hadi Nategh <hnategh@gmail.com>, Hadi Nategh <hnategh@gmail.com>).
-    Merge branch 'EGroupware-php8-typeerror-htmlspecialchars'
-    Use the same technique like above.
-    Merge branch 'php8-typeerror-htmlspecialchars' of github.com:EGroupware/Crypt into EGroupware-php8-typeerror-htmlspecialchars
-    [jan] Fix key generation with GnuPG 2 (PR #2, Mike Gabriel <mike.gabriel@das-netzwerkteam.de>).
-    Make this version 2.8.0.
-    Simplify, fix CS, and fix variable name on GPG 1.
-    Merge branch 'pr/gnupg-2.2' of github.com:sunweaver/Horde_Crypt
-    This server is completely broken now.
-    lib/Horde/Crypt/Pgp.php: Shorten long PGP key IDs to 16 digits (instead of deprecated 8 digits).
-    fix PHP 8.0 TypeError: htmlspecialchars(): Argument #1 ($string) must be of type string, array given
-    Fix fatal error "$string must be of type string, array given", happens when subject fields in certs contains multiple-values.
-    PHP 8.0 compatibility
-    Horde_Crypt_Pgp: Switch default key strength to 4096bit.
-    Horde_Crypt_Pgp_Backend: Fix generateKey() method with GnuPG 2.2 onwards.
-    Update supported PHP versions and configuration names.
-    Standardize descriptions.
-    Add chomp character.
-    Enable PHP 7.3 CI.
-    Update changelogs.
-    Typo
-    [jan] Enforce MDC verification when decrypting PGP messages to mitigatet EFAIL attacks (Immerda <admin@immerda.ch>).
-    [jan] Enforce MDC verification when decrypting PGP messages to mitigatet EFAIL attacks (Immerda <admin@immerda.ch>).
-    Development mode for Horde_Crypt-2.7.13
-    Revert "[jan] Enforce MDC verification when decrypting PGP messages to mitigatet EFAIL attacks (Immerda <admin@immerda.ch>)."
-    [jan] Enforce MDC verification when decrypting PGP messages to mitigatet EFAIL attacks (Immerda <admin@immerda.ch>).
-    Add unit tests for MDC verification.
-    Always check STDERR.
-    Enforce MDC when encrypting symmetrically.
-    mitigate efail
-    CHANGES
-    [mjr] Fix detecting digest algo properly (Bug #14814).
-    Fix incorrect changes entries.
-    [mjr] Fix detecting digest algo properly (Bug #14814)
-    [mjr] Fix detecting digest algo properly (Bug #14814)
-    Fix detecting digest algo, and tests.
-    Update package definitions.
-    Fix getting exit code on PHP 7.2+.
-    Mark Chuck and Michael as inactive.
-    Create CHANGES for all components.
-    Regenerate package.xml from changelog.yml.
-    Build changelog.yml from existing changelog(s).
-    Update .horde.yml with extended information.
-    Update composer.json.
-    Enable 7.2 builds.
-    PEAR on 5.6 and 7.0 is fixed.
-    Update file list
-    Move phpunit configuration to base directory.
-    Update references to COPYING files.
-    Use LICENSE consistently and move to base directory.
-    Stop flooding #horde channel.
-    Use https URLs.
-    Install all dependencies but PECL extensions.
-    Hopefully this finally fixes Travis builds now.
-    Always discover channel manually, due to Travis bug.
-    Fix Travis tests.
-    Add Travis configuration and .gitignore files.
-    [jan] Improve S/MIME key details formatting.
-    Development mode for Horde_Crypt-2.7.11
+  notes: "Merge pull request #11 from maintaina-com/horde_fix-verifyPassphrase-php8\nMerge pull request #3 from sunweaver/pr/4096-bit-key-strength\nmake Smime::verifyPassphrase compatibe with php8\nDevelopment mode for Crypt-3.0.0alpha5\nReleased Crypt-3.0.0alpha4\nUpdate metadata and workflows for PHP 8 support\nAdd CI job for satis repo update\nno errors\nUpdate ci.yml\nUpdate bootstrap.php\nno errors left, added ci. & phpdoc.yml\nno errors left\nWIP three errors left\nDevelopment mode for Crypt-3.0.0alpha5\nReleased Crypt-3.0.0alpha3\nDevelopment mode for Crypt-3.0.0alpha4\nReleased Crypt-3.0.0alpha2\nDevelopment mode for Crypt-3.0.0alpha3\nReleased Crypt-3.0.0alpha1\nRebase FRAMEWORK_6_0 on current master as of 2023-12-04 Replace commit 63f74ed1dfe37f277eb2323b40081168f04ea695\nFix duplicate contributor.\n[jan] Use 16 bit long PGP key IDs. (PR #6, Mike Gabriel <mike.gabriel@das-netzwerkteam.de>).\nMerge branch 'sunweaver-pr/16-digit-short-ids'\nAdopt tests to 16 bit long key IDs.\nMerge branch 'pr/16-digit-short-ids' of github.com:sunweaver/Horde_Crypt into sunweaver-pr/16-digit-short-ids\n[jan] Improve PHP 8 compatibility in S/MIME backend (PR #4, Hadi Nategh <hnategh@gmail.com>, Hadi Nategh <hnategh@gmail.com>).\nMerge branch 'EGroupware-php8-typeerror-htmlspecialchars'\nUse the same technique like above.\nMerge branch 'php8-typeerror-htmlspecialchars' of github.com:EGroupware/Crypt into EGroupware-php8-typeerror-htmlspecialchars\n[jan] Fix key generation with GnuPG 2 (PR #2, Mike Gabriel <mike.gabriel@das-netzwerkteam.de>).\nMake this version 2.8.0.\nSimplify, fix CS, and fix variable name on GPG 1.\nMerge branch 'pr/gnupg-2.2' of github.com:sunweaver/Horde_Crypt\nThis server is completely broken now.\nlib/Horde/Crypt/Pgp.php: Shorten long PGP key IDs to 16 digits (instead of deprecated 8 digits).\nfix PHP 8.0 TypeError: htmlspecialchars(): Argument #1 ($string) must be of type string, array given\nFix fatal error \"$string must be of type string, array given\", happens when subject fields in certs contains multiple-values.\nPHP 8.0 compatibility\nHorde_Crypt_Pgp: Switch default key strength to 4096bit.\nHorde_Crypt_Pgp_Backend: Fix generateKey() method with GnuPG 2.2 onwards.\nUpdate supported PHP versions and configuration names.\nStandardize descriptions.\nAdd chomp character.\nEnable PHP 7.3 CI.\nUpdate changelogs.\nTypo\n[jan] Enforce MDC verification when decrypting PGP messages to mitigatet EFAIL attacks (Immerda <admin@immerda.ch>).\n[jan] Enforce MDC verification when decrypting PGP messages to mitigatet EFAIL attacks (Immerda <admin@immerda.ch>).\nDevelopment mode for Horde_Crypt-2.7.13\nRevert \"[jan] Enforce MDC verification when decrypting PGP messages to mitigatet EFAIL attacks (Immerda <admin@immerda.ch>).\"\n[jan] Enforce MDC verification when decrypting PGP messages to mitigatet EFAIL attacks (Immerda <admin@immerda.ch>).\nAdd unit tests for MDC verification.\nAlways check STDERR.\nEnforce MDC when encrypting symmetrically.\nmitigate efail\nCHANGES\n[mjr] Fix detecting digest algo properly (Bug #14814).\nFix incorrect changes entries.\n[mjr] Fix detecting digest algo properly (Bug #14814)\n[mjr] Fix detecting digest algo properly (Bug #14814)\nFix detecting digest algo, and tests.\nUpdate package definitions.\nFix getting exit code on PHP 7.2+.\nMark Chuck and Michael as inactive.\nCreate CHANGES for all components.\nRegenerate package.xml from changelog.yml.\nBuild changelog.yml from existing changelog(s).\nUpdate .horde.yml with extended information.\nUpdate composer.json.\nEnable 7.2 builds.\nPEAR on 5.6 and 7.0 is fixed.\nUpdate file list\nMove phpunit configuration to base directory.\nUpdate references to COPYING files.\nUse LICENSE consistently and move to base directory.\nStop flooding #horde channel.\nUse https URLs.\nInstall all dependencies but PECL extensions.\nHopefully this finally fixes Travis builds now.\nAlways discover channel manually, due to Travis bug.\nFix Travis tests.\nAdd Travis configuration and .gitignore files.\n[jan] Improve S/MIME key details formatting.\nDevelopment mode for Horde_Crypt-2.7.11"
+3.0.0alpha5:
+  api: 3.0.0alpha1
+  state:
+    release: alpha
+    api: alpha
+  date: 2022-11-05
+  license:
+    identifier: LGPL-2.1
+    uri: http://www.horde.org/licenses/lgpl21
+  notes: ''
+3.0.0alpha4:
+  api: 3.0.0alpha1
+  state:
+    release: alpha
+    api: alpha
+  date: 2022-11-05
+  license:
+    identifier: LGPL-2.1
+    uri: http://www.horde.org/licenses/lgpl21
+  notes: "[rla] Alpha Release for PHP 8.\n|+\n"
+3.0.0alpha3:
+  api: 3.0.0alpha1
+  state:
+    release: alpha
+    api: alpha
+  date: 2021-03-13
+  license:
+    identifier: LGPL-2.1
+    uri: http://www.horde.org/licenses/lgpl21
+  notes: ''
+3.0.0alpha2:
+  api: 3.0.0alpha1
+  state:
+    release: alpha
+    api: alpha
+  date: 2021-02-24
+  license:
+    identifier: LGPL-2.1
+    uri: http://www.horde.org/licenses/lgpl21
+  notes: ''
+3.0.0alpha1:
+  api: 3.0.0alpha1
+  state:
+    release: stable
+    api: stable
+  date: 2021-02-24
+  license:
+    identifier: LGPL-2.1
+    uri: http://www.horde.org/licenses/lgpl21
+  notes: "[jan] Enforce MDC verification when decrypting PGP messages to mitigate EFAIL attacks (Immerda <admin@immerda.ch>).\n|+\n"
 2.8.0:
   api: 2.7.0
   state:
@@ -180,11 +98,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [jan] Use 16 bit long PGP key IDs. (PR #6, Mike Gabriel <mike.gabriel@das-netzwerkteam.de>).
-    [jan] Improve PHP 8 compatibility in S/MIME backend (PR #4, Hadi Nategh <hnategh@gmail.com>, Ralf Becker <RalfBecker@outdoor-training.de>).
-    [jan] Fix key generation with GnuPG 2 (PR #2, Mike Gabriel <mike.gabriel@das-netzwerkteam.de>).
-    [jan] Enforce MDC verification when decrypting PGP messages to mitigate EFAIL attacks (Immerda <admin@immerda.ch>).
+  notes: "[jan] Use 16 bit long PGP key IDs. (PR #6, Mike Gabriel <mike.gabriel@das-netzwerkteam.de>).\n[jan] Improve PHP 8 compatibility in S/MIME backend (PR #4, Hadi Nategh <hnategh@gmail.com>, Ralf Becker <RalfBecker@outdoor-training.de>).\n[jan] Fix key generation with GnuPG 2 (PR #2, Mike Gabriel <mike.gabriel@das-netzwerkteam.de>).\n[jan] Enforce MDC verification when decrypting PGP messages to mitigate EFAIL attacks (Immerda <admin@immerda.ch>).\n"
 2.7.12:
   api: 2.7.0
   state:
@@ -194,8 +108,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [mjr] Fix detecting digest algo properly (Bug #14814).
+  notes: "[mjr] Fix detecting digest algo properly (Bug #14814).\n"
 2.7.11:
   api: 2.7.0
   state:
@@ -205,8 +118,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [jan] Improve S/MIME key details formatting.
+  notes: "[jan] Improve S/MIME key details formatting.\n"
 2.7.10:
   api: 2.7.0
   state:
@@ -216,8 +128,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [jan] Correctly determine expiration dates of short living PGP keys.
+  notes: "[jan] Correctly determine expiration dates of short living PGP keys.\n"
 2.7.9:
   api: 2.7.0
   state:
@@ -227,9 +138,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [jan] More fixes for GnuPG 2 (Mathieu Parent <math.parent@gmail.com>).
-    [jan] Remove dependency on openssl executable (Hadi Nategh <hnategh@gmail.com>).
+  notes: "[jan] More fixes for GnuPG 2 (Mathieu Parent <math.parent@gmail.com>).\n[jan] Remove dependency on openssl executable (Hadi Nategh <hnategh@gmail.com>).\n"
 2.7.8:
   api: 2.7.0
   state:
@@ -239,9 +148,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [jan] Detect unsupported GnuPG versions.
-    [jan] Fix detection of new GnuPG API (Remi Collet <remi@remirepo.net>, PR #220).
+  notes: "[jan] Detect unsupported GnuPG versions.\n[jan] Fix detection of new GnuPG API (Remi Collet <remi@remirepo.net>, PR #220).\n"
 2.7.7:
   api: 2.7.0
   state:
@@ -251,9 +158,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [mjr] Correctly specify either sha-1 or sha-256 when signing a smime message.
-    [jan] Support GnuPG 2.1+ too (Bug #14014).
+  notes: "[mjr] Correctly specify either sha-1 or sha-256 when signing a smime message.\n[jan] Support GnuPG 2.1+ too (Bug #14014).\n"
 2.7.6:
   api: 2.7.0
   state:
@@ -263,8 +168,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [mjr] SECURITY: Fix remote code execution vulnerability (CVE-2017-7413, and CVE-2017-7414).
+  notes: "[mjr] SECURITY: Fix remote code execution vulnerability (CVE-2017-7413, and CVE-2017-7414).\n"
 2.7.5:
   api: 2.7.0
   state:
@@ -274,8 +178,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [jan] Fix label for S/MIME Encrypted Key Usage attribute.
+  notes: "[jan] Fix label for S/MIME Encrypted Key Usage attribute.\n"
 2.7.4:
   api: 2.7.0
   state:
@@ -285,9 +188,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [mjr] Ensure version information is output in ASCII armored output.
-    [jan] Fix parsing inline signed PGP messages with PHP 7+ (Bug #14352).
+  notes: "[mjr] Ensure version information is output in ASCII armored output.\n[jan] Fix parsing inline signed PGP messages with PHP 7+ (Bug #14352).\n"
 2.7.3:
   api: 2.7.0
   state:
@@ -297,8 +198,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [jan] Work around broken PGP key servers.
+  notes: "[jan] Work around broken PGP key servers.\n"
 2.7.2:
   api: 2.7.0
   state:
@@ -308,8 +208,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [jan] Fix throwing exception if verifying a PGP signature failed.
+  notes: "[jan] Fix throwing exception if verifying a PGP signature failed.\n"
 2.7.1:
   api: 2.7.0
   state:
@@ -319,9 +218,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [jan] Update Greek translation (Limperis Antonis <limperis@cti.gr>).
-    [jan] Try three times to retrieve public PGP if the keyserver pool contains broken servers.
+  notes: "[jan] Update Greek translation (Limperis Antonis <limperis@cti.gr>).\n[jan] Try three times to retrieve public PGP if the keyserver pool contains broken servers.\n"
 2.7.0:
   api: 2.7.0
   state:
@@ -331,11 +228,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [jan] Add Horde_Crypt_Pgp::pgpPacketInformationMultiple() and Horde_Crypt_Pgp_Backend_Binary::packetInfoMultiple() (Request #13190).
-    [jan] Fix retrieving PGP keys from the keyserver with certain HTTP client backends.
-    [jan] Fix creating PGP keys with comments (Bug #14125).
-    [jan] Mark PHP 7 as supported.
+  notes: "[jan] Add Horde_Crypt_Pgp::pgpPacketInformationMultiple() and Horde_Crypt_Pgp_Backend_Binary::packetInfoMultiple() (Request #13190).\n[jan] Fix retrieving PGP keys from the keyserver with certain HTTP client backends.\n[jan] Fix creating PGP keys with comments (Bug #14125).\n[jan] Mark PHP 7 as supported.\n"
 2.6.1:
   api: 2.6.0
   state:
@@ -345,8 +238,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [mjr] Fix PHP 5.3 incompatibility (Bug #14090).
+  notes: "[mjr] Fix PHP 5.3 incompatibility (Bug #14090).\n"
 2.6.0:
   api: 2.6.0
   state:
@@ -356,11 +248,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [jan] Updated UK translation.
-    [jan] Fix issues with certain locales like Turkish.
-    [mms] Split gnupg command-line binary specific code out into a separate PGP backend driver.
-    [mms] S/MIME encryption is now done only with AES (if using PHP 5.4+) or 3DES.
+  notes: "[jan] Updated UK translation.\n[jan] Fix issues with certain locales like Turkish.\n[mms] Split gnupg command-line binary specific code out into a separate PGP backend driver.\n[mms] S/MIME encryption is now done only with AES (if using PHP 5.4+) or 3DES.\n"
 2.5.3:
   api: 2.5.0
   state:
@@ -370,8 +258,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [jan] Make all PGP features locale-independent.
+  notes: "[jan] Make all PGP features locale-independent.\n"
 2.5.2:
   api: 2.5.0
   state:
@@ -381,8 +268,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [mms] Fix parsing GPG packet information using the gnupg v2.1 binary.
+  notes: "[mms] Fix parsing GPG packet information using the gnupg v2.1 binary.\n"
 2.5.1:
   api: 2.5.0
   state:
@@ -392,8 +278,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [jan] Fix using non-deprecated Content-Type for encrypted messages (Bug #13659).
+  notes: "[jan] Fix using non-deprecated Content-Type for encrypted messages (Bug #13659).\n"
 2.5.0:
   api: 2.5.0
   state:
@@ -403,8 +288,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [mms] Fix reference to constant outside of the package.
+  notes: "[mms] Fix reference to constant outside of the package.\n"
 2.4.3:
   api: 2.4.0
   state:
@@ -414,8 +298,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [jan] Update Hungarian translation (Andras Galos <galosa@netinform.hu>).
+  notes: "[jan] Update Hungarian translation (Andras Galos <galosa@netinform.hu>).\n"
 2.4.2:
   api: 2.4.0
   state:
@@ -425,8 +308,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [jan] Update Korean translation (Deokgon Kim <dgkim@dgkim.net>).
+  notes: "[jan] Update Korean translation (Deokgon Kim <dgkim@dgkim.net>).\n"
 2.4.1:
   api: 2.4.0
   state:
@@ -436,9 +318,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [mms] Ensure that all text parts are Q-P encoded when signing a MIME part.
-    [mms] More efficient parsing in Horde_Crypt_Pgp_Parse.
+  notes: "[mms] Ensure that all text parts are Q-P encoded when signing a MIME part.\n[mms] More efficient parsing in Horde_Crypt_Pgp_Parse.\n"
 2.4.0:
   api: 2.4.0
   state:
@@ -448,13 +328,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [mms] Remove Horde_Crypt_Pgp#generateRevocation() (Bug #7375).
-    [mms] Fix submitting PGP keys to a public keyserver (Bug #10931).
-    [mms] PGP keyserver code now uses Horde_Http_Client to connect to the keyserver.
-    [mms] Move PGP keyserver code to a separate Horde_Crypt_Pgp_Keyserver class.
-    [mms] Add Horde_Crypt_Pgp_Parse#parseToPart().
-    [mms] Move Horde_Crypt_Pgp#parsePGPData() to separate class (Horde_Crypt_Pgp_Parse), since it can be used even if GnuPG binary is not available.
+  notes: "[mms] Remove Horde_Crypt_Pgp#generateRevocation() (Bug #7375).\n[mms] Fix submitting PGP keys to a public keyserver (Bug #10931).\n[mms] PGP keyserver code now uses Horde_Http_Client to connect to the keyserver.\n[mms] Move PGP keyserver code to a separate Horde_Crypt_Pgp_Keyserver class.\n[mms] Add Horde_Crypt_Pgp_Parse#parseToPart().\n[mms] Move Horde_Crypt_Pgp#parsePGPData() to separate class (Horde_Crypt_Pgp_Parse), since it can be used even if GnuPG binary is not available.\n"
 2.3.0:
   api: 2.3.0
   state:
@@ -464,8 +338,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [mms] Horde_Crypt_Pgp#parsePGPData() now accepts a Horde_Stream object as an argument.
+  notes: "[mms] Horde_Crypt_Pgp#parsePGPData() now accepts a Horde_Stream object as an argument.\n"
 2.2.2:
   api: 2.2.0
   state:
@@ -475,8 +348,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [jan] Fix detecting bad PGP signatures on some systems with non-English locales (Bug #10273).
+  notes: "[jan] Fix detecting bad PGP signatures on some systems with non-English locales (Bug #10273).\n"
 2.2.1:
   api: 2.2.0
   state:
@@ -486,8 +358,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [mms] SECURITY: Fix XSS vulnerability in Horde_Crypt_Smime#certToHTML() (João Machado <geral@jpaulo.eu>).
+  notes: "[mms] SECURITY: Fix XSS vulnerability in Horde_Crypt_Smime#certToHTML() (João Machado <geral@jpaulo.eu>).\n"
 2.2.0:
   api: 2.2.0
   state:
@@ -497,9 +368,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [mms] Fix Horde_Crypt_Pgp#encryptedSymmetrically() from entering an infinite loop when using GnuPg v2.
-    [mms] Improve security in PGP key generation (Request #12099).
+  notes: "[mms] Fix Horde_Crypt_Pgp#encryptedSymmetrically() from entering an infinite loop when using GnuPg v2.\n[mms] Improve security in PGP key generation (Request #12099).\n"
 2.1.3:
   api: 1.2.0
   state:
@@ -509,9 +378,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [jan] Change default keyserver to pool.sks-keyservers.net.
-    [jan] Fix finding key ID for an email address on a keyserver (o@immerda.ch).
+  notes: "[jan] Change default keyserver to pool.sks-keyservers.net.\n[jan] Fix finding key ID for an email address on a keyserver (o@immerda.ch).\n"
 2.1.2:
   api: 1.2.0
   state:
@@ -521,8 +388,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [jan] Update French translation (Paul De Vlieger <paul.de_vlieger@moniut.univ-bpclermont.fr>).
+  notes: "[jan] Update French translation (Paul De Vlieger <paul.de_vlieger@moniut.univ-bpclermont.fr>).\n"
 2.1.1:
   api: 1.2.0
   state:
@@ -532,8 +398,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [jan] Update Basque translation (Ibon Igartua <ibon.igartua@ehu.es>).
+  notes: "[jan] Update Basque translation (Ibon Igartua <ibon.igartua@ehu.es>).\n"
 2.1.0:
   api: 1.2.0
   state:
@@ -543,53 +408,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [jan] Update Dutch translation (Arjen de Korte <build+horde@de-korte.org>).
-    [mms] Add Horde_Crypt_Pgp#getPublicKeyFromPrivateKey().
-2.0.0beta2:
-  api: 1.1.0
-  state:
-    release: beta
-    api: stable
-  date: 2012-08-29
-  license:
-    identifier: LGPL-2.1
-    uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [mms] Improvements in obtaining GPG keys from a keyserver (Bug #11380) (o+horde@immerda.ch).
-2.0.0beta1:
-  api: 1.1.0
-  state:
-    release: beta
-    api: stable
-  date: 2012-07-19
-  license:
-    identifier: LGPL-2.1
-    uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    First beta release for Horde 5.
-2.0.0alpha1:
-  api: 1.1.0
-  state:
-    release: alpha
-    api: stable
-  date: 2012-07-05
-  license:
-    identifier: LGPL-2.1
-    uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    First alpha release for Horde 5.
-2.0.0RC1:
-  api: 1.1.0
-  state:
-    release: beta
-    api: stable
-  date: 2012-10-26
-  license:
-    identifier: LGPL-2.1
-    uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [jan] Throw exception if parsing of S/MIME certificates fails (Bug #11530).
+  notes: "[jan] Update Dutch translation (Arjen de Korte <build+horde@de-korte.org>).\n[mms] Add Horde_Crypt_Pgp#getPublicKeyFromPrivateKey().\n"
 2.0.0:
   api: 1.1.0
   state:
@@ -599,8 +418,47 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    First stable release for Horde 5.
+  notes: "First stable release for Horde 5.\n"
+2.0.0RC1:
+  api: 1.1.0
+  state:
+    release: beta
+    api: stable
+  date: 2012-10-26
+  license:
+    identifier: LGPL-2.1
+    uri: http://www.horde.org/licenses/lgpl21
+  notes: "[jan] Throw exception if parsing of S/MIME certificates fails (Bug #11530).\n"
+2.0.0beta2:
+  api: 1.1.0
+  state:
+    release: beta
+    api: stable
+  date: 2012-08-29
+  license:
+    identifier: LGPL-2.1
+    uri: http://www.horde.org/licenses/lgpl21
+  notes: "[mms] Improvements in obtaining GPG keys from a keyserver (Bug #11380) (o+horde@immerda.ch).\n"
+2.0.0beta1:
+  api: 1.1.0
+  state:
+    release: beta
+    api: stable
+  date: 2012-07-19
+  license:
+    identifier: LGPL-2.1
+    uri: http://www.horde.org/licenses/lgpl21
+  notes: "First beta release for Horde 5.\n"
+2.0.0alpha1:
+  api: 1.1.0
+  state:
+    release: alpha
+    api: stable
+  date: 2012-07-05
+  license:
+    identifier: LGPL-2.1
+    uri: http://www.horde.org/licenses/lgpl21
+  notes: "First alpha release for Horde 5.\n"
 1.1.3:
   api: 1.1.0
   state:
@@ -610,9 +468,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [jan] Throw exception if parsing of S/MIME certificates fails (Bug #11530).
-    [mms] Improvements in obtaining GPG keys from a keyserver (Bug #11380) (o+horde@immerda.ch).
+  notes: "[jan] Throw exception if parsing of S/MIME certificates fails (Bug #11530).\n[mms] Improvements in obtaining GPG keys from a keyserver (Bug #11380) (o+horde@immerda.ch).\n"
 1.1.2:
   api: 1.1.0
   state:
@@ -622,8 +478,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [jan] Fix HTML rendering of S/MIME certificates with multi-value attributes.
+  notes: "[jan] Fix HTML rendering of S/MIME certificates with multi-value attributes.\n"
 1.1.1:
   api: 1.1.0
   state:
@@ -633,9 +488,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [mms] Improved parsing of S/MIME certificate information (Bug #10956).
-    [mms] Silently ignore unknown data when parsing S/MIME certificates.
+  notes: "[mms] Improved parsing of S/MIME certificate information (Bug #10956).\n[mms] Silently ignore unknown data when parsing S/MIME certificates.\n"
 1.1.0:
   api: 1.1.0
   state:
@@ -645,10 +498,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [mms] Provide signature information when decrypting a message, rather than just a boolean result.
-    [mms] Fix displaying PGP key expiration information.
-    [mms] Allow expiration date to be given to Horde_Crypt_Pgp#generateKey() (Request #5754).
+  notes: "[mms] Provide signature information when decrypting a message, rather than just a boolean result.\n[mms] Fix displaying PGP key expiration information.\n[mms] Allow expiration date to be given to Horde_Crypt_Pgp#generateKey() (Request #5754).\n"
 1.0.6:
   api: 1.0.0
   state:
@@ -658,10 +508,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [jan] Update Croatian translation.
-    [jan] Update Estonian translation.
-    [mms] Upgrade signed S/MIME output to comply with S/MIME version 3.2.
+  notes: "[jan] Update Croatian translation.\n[jan] Update Estonian translation.\n[mms] Upgrade signed S/MIME output to comply with S/MIME version 3.2.\n"
 1.0.5:
   api: 1.0.0
   state:
@@ -671,8 +518,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [mms] Encrypted data is already base64 encoded (Bug #10285).
+  notes: "[mms] Encrypted data is already base64 encoded (Bug #10285).\n"
 1.0.4:
   api: 1.0.0
   state:
@@ -682,12 +528,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [jan] Update Latvian translation.
-    [jan] Allow to specify body charset when verifying PGP signed messages.
-    [jan] Update Lithuanian translation.
-    [jan] Update Brazilian Portuguese translation.
-    [mms] Use strongest cipher possible when encrypting S/MIME data (Request #10246).
+  notes: "[jan] Update Latvian translation.\n[jan] Allow to specify body charset when verifying PGP signed messages.\n[jan] Update Lithuanian translation.\n[jan] Update Brazilian Portuguese translation.\n[mms] Use strongest cipher possible when encrypting S/MIME data (Request #10246).\n"
 1.0.3:
   api: 1.0.0
   state:
@@ -697,8 +538,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [jan] Updated Slovak translation.
+  notes: "[jan] Updated Slovak translation.\n"
 1.0.2:
   api: 1.0.0
   state:
@@ -708,8 +548,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [jan] Updated Spanish translation.
+  notes: "[jan] Updated Spanish translation.\n"
 1.0.1:
   api: 1.0.0
   state:
@@ -719,54 +558,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    [jan] Fix package.xml syntax.
-1.0.0beta1:
-  api: 1.0.0
-  state:
-    release: beta
-    api: beta
-  date: 2011-03-16
-  license:
-    identifier: LGPL-2.1
-    uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    First beta release for Horde 4.
-1.0.0alpha1:
-  api: 1.0.0
-  state:
-    release: alpha
-    api: alpha
-  date: 2011-03-08
-  license:
-    identifier: LGPL-2.1
-    uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    First alpha release for Horde 4.
-    Add Horde_Crypt_Exception.
-    Better error handling for gnupg and openssl command line binaries.
-1.0.0RC2:
-  api: 1.0.0
-  state:
-    release: beta
-    api: beta
-  date: 2011-03-29
-  license:
-    identifier: LGPL-2.1
-    uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    Second release candidate for Horde 4.
-1.0.0RC1:
-  api: 1.0.0
-  state:
-    release: beta
-    api: beta
-  date: 2011-03-22
-  license:
-    identifier: LGPL-2.1
-    uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    First release candidate for Horde 4.
+  notes: "[jan] Fix package.xml syntax.\n"
 1.0.0:
   api: 1.0.0
   state:
@@ -776,8 +568,47 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    First stable release for Horde 4.
+  notes: "First stable release for Horde 4.\n"
+1.0.0RC2:
+  api: 1.0.0
+  state:
+    release: beta
+    api: beta
+  date: 2011-03-29
+  license:
+    identifier: LGPL-2.1
+    uri: http://www.horde.org/licenses/lgpl21
+  notes: "Second release candidate for Horde 4.\n"
+1.0.0RC1:
+  api: 1.0.0
+  state:
+    release: beta
+    api: beta
+  date: 2011-03-22
+  license:
+    identifier: LGPL-2.1
+    uri: http://www.horde.org/licenses/lgpl21
+  notes: "First release candidate for Horde 4.\n"
+1.0.0beta1:
+  api: 1.0.0
+  state:
+    release: beta
+    api: beta
+  date: 2011-03-16
+  license:
+    identifier: LGPL-2.1
+    uri: http://www.horde.org/licenses/lgpl21
+  notes: "First beta release for Horde 4.\n"
+1.0.0alpha1:
+  api: 1.0.0
+  state:
+    release: alpha
+    api: alpha
+  date: 2011-03-08
+  license:
+    identifier: LGPL-2.1
+    uri: http://www.horde.org/licenses/lgpl21
+  notes: "First alpha release for Horde 4.\nAdd Horde_Crypt_Exception.\nBetter error handling for gnupg and openssl command line binaries.\n"
 0.0.2:
   api: 0.0.2
   state:
@@ -787,10 +618,7 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    Converted to package.xml 2.0 for pear.horde.org
-    Added support for email addresses in subjectAltName of S/MIME certs (Bug #5986)
-    Improved support for PGP fingerprints (Bug #6363)
+  notes: "Converted to package.xml 2.0 for pear.horde.org\nAdded support for email addresses in subjectAltName of S/MIME certs (Bug #5986)\nImproved support for PGP fingerprints (Bug #6363)\n"
 0.0.1:
   api: 0.0.1
   state:
@@ -800,5 +628,4 @@
   license:
     identifier: LGPL-2.1
     uri: http://www.horde.org/licenses/lgpl21
-  notes: |
-    Initial release as a PEAR package
+  notes: "Initial release as a PEAR package\n"
